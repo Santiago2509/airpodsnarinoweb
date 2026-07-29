@@ -1,0 +1,147 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.hero {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background elements */
+.glowBackground {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.08) 0%, rgba(0,0,0,0) 70%);
+  border-radius: 50%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.content {
+  text-align: center;
+  z-index: 10;
+  max-width: 900px;
+}
+
+.title {
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -2px;
+  color: var(--foreground);
+  text-transform: uppercase;
+}
+
+.titleAccent {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--primary-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.subtitle {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  color: #94a3b8;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ctaContainer {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #1e40af 100%);
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px -10px var(--primary-blue);
+}
+
+.primaryButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px -10px var(--primary-blue);
+  background: linear-gradient(135deg, var(--primary-blue-hover) 0%, #1e3a8a 100%);
+}
+
+.secondaryButton {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+/* Floating elements in background */
+.floatingElement1 {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.floatingElement2 {
+  position: absolute;
+  bottom: 20%;
+  right: 15%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(30px);
+  z-index: -1;
+  animation-delay: -3s;
+}
+
+@media (max-width: 640px) {
+  .title {
+    letter-spacing: -1px;
+  }
+  .ctaContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  .primaryButton, .secondaryButton {
+    width: 100%;
+    max-width: 300px;
+  }
+}
