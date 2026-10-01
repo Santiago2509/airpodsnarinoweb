@@ -1,0 +1,119 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.imageCard {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(2, 4, 10, 0.5);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mainBadge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(56, 189, 248, 0.85);
+  color: #040814;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.removeBtn {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  background: rgba(239, 68, 68, 0.85);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.removeBtn:hover {
+  background: #ef4444;
+}
+
+.addCard {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.5rem;
+  border: 2px dashed rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.addCard:hover {
+  border-color: rgba(56, 189, 248, 0.8);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.addIcon {
+  font-size: 1.8rem;
+  color: #38bdf8;
+  line-height: 1;
+}
+
+.addText {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-align: center;
+  padding: 0 0.5rem;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(56, 189, 248, 0.2);
+  border-top-color: #38bdf8;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error {
+  color: #f87171;
+  font-size: 0.85rem;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.5;
+}

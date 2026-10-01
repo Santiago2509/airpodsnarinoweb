@@ -1,0 +1,77 @@
+.adminContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: #02040a;
+  color: #f8fafc;
+}
+
+.sidebar {
+  width: 260px;
+  background: rgba(15, 23, 42, 0.6);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.sidebarHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  margin-bottom: 2rem;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  color: #cbd5e1;
+  transition: all 0.3s ease;
+}
+
+.navLink:hover {
+  background: rgba(59, 130, 246, 0.2);
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+.sidebarFooter {
+  margin-top: auto;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.logoutButton:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.mainContent {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}

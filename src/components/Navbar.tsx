@@ -25,9 +25,9 @@ export default function Navbar() {
         
         <div className={styles.navLinks}>
           <Link href="/" className={styles.navLink}>Inicio</Link>
-          <Link href="#catalogo" className={styles.navLink}>Catálogo</Link>
-          <Link href="#quienes-somos" className={styles.navLink}>Quiénes somos</Link>
-          <Link href="#contacto" className={styles.navLink}>Contacto</Link>
+          <Link href="/catalogo" className={styles.navLink}>Catálogo</Link>
+          <Link href="/quienes-somos" className={styles.navLink}>Quiénes somos</Link>
+          <Link href="/contacto" className={styles.navLink}>Contacto</Link>
         </div>
       </div>
     </nav>

@@ -1,0 +1,114 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  color: #f8fafc;
+  font-size: 1.8rem;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.select {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  outline: none;
+  font-family: inherit;
+}
+
+.select:focus {
+  border-color: #38bdf8;
+}
+
+.summaryCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.card {
+  background: rgba(2, 4, 10, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cardTitle {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cardValue {
+  color: #f8fafc;
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--font-orbitron);
+}
+
+.profitPositive {
+  color: #4ade80;
+}
+
+.profitNegative {
+  color: #f87171;
+}
+
+.tableContainer {
+  background: rgba(2, 4, 10, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  background: rgba(255, 255, 255, 0.02);
+  color: #94a3b8;
+  font-weight: 600;
+  text-align: left;
+  padding: 1rem 1.5rem;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table td {
+  padding: 1rem 1.5rem;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  color: #94a3b8;
+}

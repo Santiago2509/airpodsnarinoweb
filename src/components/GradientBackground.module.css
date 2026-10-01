@@ -1,0 +1,70 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background: #00020a;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: 0.28;
+}
+
+/* Orbe superior izquierdo */
+.orb1 {
+  width: 70vw;
+  height: 70vw;
+  background: radial-gradient(circle, #002aaa 0%, #000d40 60%, transparent 100%);
+  top: -20%;
+  left: -15%;
+  animation: moveOrb1 22s ease-in-out infinite alternate;
+}
+
+/* Orbe inferior derecho */
+.orb2 {
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, #0038c0 0%, #001050 60%, transparent 100%);
+  bottom: -15%;
+  right: -10%;
+  animation: moveOrb2 28s ease-in-out infinite alternate;
+}
+
+/* Orbe central sutil */
+.orb3 {
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, #001e80 0%, #000a30 60%, transparent 100%);
+  top: 30%;
+  left: 30%;
+  opacity: 0.12;
+  animation: moveOrb3 20s ease-in-out infinite alternate;
+}
+
+/* Movimientos continuos y suaves - sin reinicio brusco gracias a "alternate" */
+@keyframes moveOrb1 {
+  0%   { transform: translate(0,    0);    }
+  25%  { transform: translate(8vw,  6vh);  }
+  50%  { transform: translate(3vw,  15vh); }
+  75%  { transform: translate(12vw, 8vh);  }
+  100% { transform: translate(5vw,  20vh); }
+}
+
+@keyframes moveOrb2 {
+  0%   { transform: translate(0,    0);     }
+  25%  { transform: translate(-10vw, -8vh); }
+  50%  { transform: translate(-4vw, -18vh); }
+  75%  { transform: translate(-14vw,-10vh); }
+  100% { transform: translate(-6vw, -22vh); }
+}
+
+@keyframes moveOrb3 {
+  0%   { transform: translate(0,   0);    }
+  33%  { transform: translate(8vw, -10vh); }
+  66%  { transform: translate(-8vw, 8vh); }
+  100% { transform: translate(4vw, -6vh); }
+}

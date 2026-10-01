@@ -1,0 +1,127 @@
+.main {
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+.hero {
+  padding: 10rem 2rem 5rem;
+  text-align: center;
+  position: relative;
+  animation: fadeIn 1s ease-out;
+}
+
+.title {
+  font-family: var(--font-orbitron), system-ui, sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  margin: 0;
+  color: #fff;
+}
+
+.titleAccent {
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.flareDivider {
+  width: min(70vw, 300px);
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.5) 25%, #ffffff 50%, rgba(56, 189, 248, 0.5) 75%, transparent 100%);
+  margin: 1.5rem auto;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+}
+
+.subtitle {
+  color: #cbd5e1;
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contentContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.textSection {
+  background: rgba(4, 8, 20, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 3rem;
+  margin-bottom: 3rem;
+  color: #94a3b8;
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+.textSection p {
+  margin-bottom: 1.5rem;
+}
+
+.textSection strong {
+  color: #fff;
+}
+
+.sectionTitle {
+  font-family: var(--font-orbitron), sans-serif;
+  color: var(--accent-cyan);
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.featureCard {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.6) 0%, rgba(4, 8, 20, 0.6) 100%);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(56, 189, 248, 0.2);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.icon {
+  color: var(--accent-cyan);
+  margin-bottom: 1.2rem;
+}
+
+.featureCard h3 {
+  color: #fff;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.featureCard p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .textSection {
+    padding: 2rem;
+  }
+}

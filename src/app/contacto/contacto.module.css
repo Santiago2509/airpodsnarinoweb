@@ -1,0 +1,185 @@
+.main {
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+.hero {
+  padding: 10rem 2rem 5rem;
+  text-align: center;
+  position: relative;
+  animation: fadeIn 1s ease-out;
+}
+
+.title {
+  font-family: var(--font-orbitron), system-ui, sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  margin: 0;
+  color: #fff;
+}
+
+.titleAccent {
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.flareDivider {
+  width: min(70vw, 300px);
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.5) 25%, #ffffff 50%, rgba(56, 189, 248, 0.5) 75%, transparent 100%);
+  margin: 1.5rem auto;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+}
+
+.subtitle {
+  color: #cbd5e1;
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contentContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* WhatsApp Big CTA */
+.whatsappCard {
+  background: linear-gradient(135deg, #128C7E 0%, #075E54 100%);
+  border-radius: 24px;
+  padding: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px rgba(18, 140, 126, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.whatsappCard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.whatsappCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(18, 140, 126, 0.4);
+}
+
+.whatsappCard:hover::before {
+  transform: translateX(100%);
+}
+
+.whatsappContent {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.whatsappContent h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.whatsappContent p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  font-family: var(--font-orbitron), sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.whatsappAction {
+  font-weight: 600;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+}
+
+/* Grid for social links */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.socialCard, .infoCard {
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.socialCard:hover {
+  background: rgba(30, 41, 59, 0.6);
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.socialIconWrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.infoIcon {
+  color: var(--accent-cyan);
+  margin-bottom: 1.5rem;
+}
+
+.socialCard h3, .infoCard h3 {
+  color: #fff;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.socialCard p, .infoCard p {
+  color: #94a3b8;
+  font-size: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .whatsappCard {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+    padding: 2rem;
+  }
+  
+  .whatsappContent {
+    flex-direction: column;
+  }
+}
