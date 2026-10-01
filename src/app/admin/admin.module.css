@@ -75,3 +75,55 @@
   padding: 2rem;
   overflow-y: auto;
 }
+
+@media (max-width: 768px) {
+  .adminContainer {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .sidebarHeader h2 {
+    margin-bottom: 0;
+    font-size: 1.2rem;
+  }
+
+  .sidebarNav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    justify-content: center;
+    flex: unset;
+  }
+
+  .navLink {
+    padding: 0.5rem;
+  }
+
+  .navLink span {
+    display: none;
+  }
+
+  .sidebarFooter {
+    margin-top: 0;
+  }
+
+  .logoutButton span {
+    display: none;
+  }
+
+  .mainContent {
+    padding: 1rem;
+  }
+}

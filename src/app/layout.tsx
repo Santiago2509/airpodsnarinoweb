@@ -1,20 +1,7 @@
-import { Montserrat, Orbitron } from "next/font/google";
 import "./globals.css";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import GradientBackground from "@/components/GradientBackground";
 import SmoothScrolling from "@/components/SmoothScrolling";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-montserrat",
-});
-
-const orbitron = Orbitron({
-  subsets: ["latin"],
-  weight: ["600", "700", "800", "900"],
-  variable: "--font-orbitron",
-});
 
 export const metadata = {
   title: "Airpods Nariño",
@@ -28,7 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${montserrat.variable} ${orbitron.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet" />
+      </head>
+      <body>
         <SmoothScrolling>
           <GradientBackground />
           <LayoutWrapper>

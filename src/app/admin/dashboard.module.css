@@ -68,3 +68,11 @@
   font-weight: 700;
   color: #fff;
 }
+
+@media (max-width: 768px) {
+  .headerRow {
+    flex-direction: column !important;
+    gap: 1rem;
+    align-items: flex-start !important;
+  }
+}

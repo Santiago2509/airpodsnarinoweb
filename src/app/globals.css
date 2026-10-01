@@ -5,6 +5,8 @@
   --primary-blue-hover: #2563eb;
   --accent-cyan: #22d3ee;
   --nav-bg: rgba(4, 8, 20, 0.7);
+  --font-montserrat: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-orbitron: 'Orbitron', system-ui, -apple-system, sans-serif;
 }
 
 html,
@@ -17,7 +19,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-montserrat), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-montserrat);
   color: var(--foreground);
   background-color: #00050f;
   -webkit-font-smoothing: antialiased;
