@@ -28,7 +28,7 @@ export default function AdminProductos() {
     imageUrl: "",
     images: [] as string[],
     stock: 0,
-    status: "active" as const,
+    status: "active" as "active" | "inactive",
     wholesaleMinQuantity: undefined as number | undefined,
     wholesalePrice: undefined as number | undefined
   };
