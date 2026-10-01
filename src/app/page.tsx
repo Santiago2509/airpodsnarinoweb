@@ -34,6 +34,8 @@ export default function Home() {
           autoPlay 
           muted 
           playsInline 
+          loop
+          preload="auto"
           onTimeUpdate={handleTimeUpdate}
           className={styles.videoBackground}
         >
