@@ -2,7 +2,7 @@
 
 import styles from "./page.module.css";
 import Link from "next/link";
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useProductStore } from "@/store/useProductStore";
 import { ArrowRight } from "lucide-react";
 import { Product } from "@/lib/types";
@@ -11,6 +11,7 @@ import Features3D from "@/components/Features3D";
 export default function Home() {
   const { products } = useProductStore();
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const videoRef = useRef<HTMLVideoElement>(null);
   
   useEffect(() => {
     if (products.length > 0) {
@@ -19,6 +20,17 @@ export default function Home() {
       setFeaturedProducts(shuffled.slice(0, 3));
     }
   }, [products]);
+
+  // Force video autoplay on iOS (autoPlay HTML attr is often blocked)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      video.play().catch(() => {
+        // Autoplay blocked by browser policy — ignore silently
+      });
+    }
+  }, []);
 
   const handleTimeUpdate = (e: SyntheticEvent<HTMLVideoElement>) => {
     const video = e.currentTarget;
@@ -31,6 +43,7 @@ export default function Home() {
     <main className={styles.main}>
       <section className={styles.hero}>
         <video 
+          ref={videoRef}
           autoPlay 
           muted 
           playsInline 
