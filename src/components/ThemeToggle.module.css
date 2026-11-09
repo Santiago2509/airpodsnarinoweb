@@ -1,0 +1,63 @@
+/* 44px hit area; the icon rotates out as the other rotates in */
+.toggle {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--foreground);
+  transition: background-color var(--duration-hover) ease, transform var(--duration-press) var(--ease-out);
+}
+
+.toggle:active {
+  transform: scale(0.92);
+}
+
+.track {
+  position: relative;
+  width: 18px;
+  height: 18px;
+}
+
+.sun,
+.moon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  transition:
+    transform 400ms var(--ease-out),
+    opacity 250ms var(--ease-out);
+}
+
+.moon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.6);
+}
+
+.toggle[data-dark] .sun {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.6);
+}
+
+.toggle[data-dark] .moon {
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .toggle:hover {
+    background: var(--surface-muted);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun,
+  .moon {
+    transform: none !important;
+    transition: opacity 200ms ease;
+  }
+}

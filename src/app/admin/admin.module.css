@@ -1,4 +1,5 @@
 .adminContainer {
+  color: var(--foreground);
   display: flex;
   min-height: 100dvh;
   background-color: #02040a;
@@ -96,6 +97,7 @@
 }
 
 .loginPage {
+  color: var(--foreground);
   min-height: 100dvh;
   display: grid;
   place-items: center;

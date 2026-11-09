@@ -3,18 +3,21 @@ import "./globals.css";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import GradientBackground from "@/components/GradientBackground";
 import SmoothScrolling from "@/components/SmoothScrolling";
+import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "Airpods Nariño",
-  description: "Los mejores audífonos al mejor precio en Nariño",
+  description: "Audífonos y accesorios Apple con garantía real en Pasto y todo Nariño.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#00050f",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f4f6fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#03050b" },
+  ],
 };
 
 export default function RootLayout({
@@ -23,7 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    // next-themes sets data-theme before paint, so the server markup differs on purpose
+    <html lang="es" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -33,10 +37,12 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <SmoothScrolling>
-          <GradientBackground />
-          <LayoutWrapper>{children}</LayoutWrapper>
-        </SmoothScrolling>
+        <Providers>
+          <SmoothScrolling>
+            <GradientBackground />
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </SmoothScrolling>
+        </Providers>
       </body>
     </html>
   );

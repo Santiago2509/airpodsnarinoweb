@@ -1,0 +1,222 @@
+.showcase {
+  position: relative;
+  height: 420svh;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.layout {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 5rem var(--gutter) 2rem;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
+}
+
+/* ---------- Captions: one at a time, crossfaded with a light blur ---------- */
+
+.captions {
+  position: relative;
+  display: grid;
+  min-height: 320px;
+}
+
+.caption {
+  grid-area: 1 / 1;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(6px);
+  pointer-events: none;
+  transition:
+    opacity 450ms var(--ease-out),
+    transform 450ms var(--ease-out),
+    filter 450ms var(--ease-out);
+}
+
+/* Captions already read leave upward; upcoming ones wait below */
+.caption[data-past] {
+  transform: translateY(-24px);
+}
+
+.caption[data-active] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  pointer-events: auto;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.captionTitle {
+  font-size: clamp(2rem, 3.6vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.captionText {
+  max-width: 40ch;
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.dots {
+  position: absolute;
+  bottom: -2.5rem;
+  left: 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background-color 300ms ease, transform 300ms var(--ease-out);
+}
+
+.dot[data-active] {
+  background: var(--accent);
+  transform: scale(1.3);
+}
+
+/* ---------- Stage: always dark, the renders are shot on black ---------- */
+
+.stage {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 40%, #0b1a33 0%, var(--stage) 70%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  isolation: isolate;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 600ms var(--ease-out);
+}
+
+.canvas[data-ready] {
+  opacity: 1;
+}
+
+.stageGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 110%, rgba(56, 189, 248, 0.22), transparent 55%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04), transparent 25%);
+}
+
+.progress {
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.progressFill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #7dd3fc);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+@media (max-width: 900px) {
+  .showcase {
+    height: 380svh;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    padding-top: 5.5rem;
+    align-content: center;
+  }
+
+  .stage {
+    order: -1;
+    aspect-ratio: 4 / 3;
+  }
+
+  .captions {
+    min-height: 250px;
+    align-items: start;
+  }
+
+  .caption {
+    align-self: start;
+    gap: 0.7rem;
+  }
+
+  .icon {
+    display: none;
+  }
+
+  .captionTitle {
+    font-size: clamp(1.75rem, 7vw, 2.4rem);
+  }
+
+  .captionText {
+    font-size: 1rem;
+  }
+
+  .dots {
+    bottom: auto;
+    top: -1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caption,
+  .caption[data-past] {
+    transform: none;
+    filter: none;
+    transition: opacity 250ms ease;
+  }
+
+  .canvas {
+    transition: none;
+  }
+}

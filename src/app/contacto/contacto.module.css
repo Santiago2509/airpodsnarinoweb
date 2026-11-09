@@ -1,170 +1,227 @@
 .main {
   min-height: 100svh;
-  padding-bottom: 5rem;
+  padding-bottom: clamp(4rem, 10vw, 7rem);
 }
 
-
-
-
-
-
-.contentContainer {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+.bento {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-/* WhatsApp Big CTA */
-.whatsappCard {
-  background: linear-gradient(135deg, #128C7E 0%, #075E54 100%);
-  border-radius: 24px;
-  padding: 3rem;
+.bento > * {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-decoration: none;
-  color: white;
-  transition:
-    transform var(--duration-press) var(--ease-out),
-    box-shadow var(--duration-hover) ease;
-  box-shadow: 0 10px 30px rgba(18, 140, 126, 0.3);
+}
+
+.bento > * > * {
+  flex: 1;
+}
+
+.whatsappCell {
+  grid-column: 1 / -1;
+}
+
+/* ---------- WhatsApp hero card ---------- */
+
+.whatsapp {
   position: relative;
   overflow: hidden;
-}
-
-.whatsappCard::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
-  transform: translateX(-100%);
-  transition: transform 600ms var(--ease-in-out);
-}
-
-.whatsappCard:active,
-.socialCard:active {
-  transform: scale(0.98);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .whatsappCard:hover {
-    box-shadow: 0 15px 40px rgba(18, 140, 126, 0.45);
-  }
-
-  .whatsappCard:hover::before {
-    transform: translateX(100%);
-  }
-
-  .socialCard:hover {
-    background: rgba(30, 41, 59, 0.6);
-    border-color: rgba(255, 255, 255, 0.12);
-  }
-}
-
-.whatsappContent {
-  min-width: 0;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  padding: clamp(1.75rem, 5vw, 3rem);
+  border-radius: calc(var(--radius-lg) + 4px);
+  background: linear-gradient(135deg, #1fa855 0%, #0f766e 100%);
+  color: #fff;
+  box-shadow: 0 30px 60px -25px rgba(31, 168, 85, 0.6);
+  transition: transform var(--duration-press) var(--ease-out), box-shadow 300ms ease;
 }
 
-.whatsappContent h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 0.3rem;
+.whatsapp::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 800ms var(--ease-in-out);
 }
 
-.whatsappContent p {
-  font-size: 1.2rem;
-  opacity: 0.9;
-  font-family: var(--font-orbitron), sans-serif;
-  letter-spacing: 0.03em;
-  font-variant-numeric: tabular-nums;
+.whatsapp:active {
+  transform: scale(0.985);
 }
 
-.whatsappAction {
-  font-weight: 600;
-  font-size: 1.2rem;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 0.8rem 1.5rem;
-  border-radius: 50px;
-  white-space: nowrap;
-}
-
-/* Grid for social links */
-.grid {
+.whatsappIcon {
+  flex-shrink: 0;
+  width: 68px;
+  height: 68px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  place-items: center;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.18);
 }
 
-.socialCard, .infoCard {
-  background: rgba(15, 23, 42, 0.4);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  padding: 2.5rem 2rem;
+.whatsappText {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  text-decoration: none;
+  gap: 0.3rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.whatsappTitle {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.whatsappPhone {
+  font-size: 1.1rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.arrow {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff;
+  color: #0f766e;
+  transition: transform 300ms var(--ease-out);
+}
+
+/* ---------- Small cards ---------- */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--background-elevated);
+  box-shadow: var(--shadow-sm);
   transition:
     transform var(--duration-press) var(--ease-out),
-    background-color var(--duration-hover) ease,
-    border-color var(--duration-hover) ease;
+    border-color var(--duration-hover) ease,
+    box-shadow 300ms ease;
 }
 
-.socialIconWrapper {
-  width: 60px;
-  height: 60px;
-  border-radius: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+a.card:active {
+  transform: scale(0.98);
 }
 
-.infoIcon {
-  color: var(--accent-cyan);
-  margin-bottom: 1.5rem;
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 1rem;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
-.socialCard h3, .infoCard h3 {
+.instagram {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
   color: #fff;
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
 }
 
-.socialCard p, .infoCard p {
-  color: #94a3b8;
-  font-size: 1rem;
+.tiktok {
+  background: #000;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
+.cardKicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
 
-@media (max-width: 768px) {
-  .whatsappCard {
-    flex-direction: column;
-    text-align: center;
-    gap: 2rem;
-    padding: 2rem;
-  }
-  
-  .whatsappContent {
-    flex-direction: column;
+.whatsapp .cardKicker {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cardTitle {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.email {
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.cardNote {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.cardArrow {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  color: var(--text-subtle);
+  transition: transform 300ms var(--ease-out), color var(--duration-hover) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .whatsapp:hover::before {
+    transform: translateX(100%);
   }
 
-  .whatsappContent h2 {
-    font-size: 1.5rem;
+  .whatsapp:hover .arrow {
+    transform: rotate(45deg);
+  }
+
+  a.card:hover {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+    box-shadow: var(--shadow-md);
+  }
+
+  a.card:hover .cardArrow {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+}
+
+@media (max-width: 860px) {
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .bento {
+    grid-template-columns: 1fr;
+  }
+
+  .whatsapp {
+    flex-wrap: wrap;
+  }
+
+  .arrow {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .whatsappCard::before {
+  .whatsapp::before {
     display: none;
+  }
+
+  .arrow,
+  .cardArrow {
+    transition: none;
   }
 }

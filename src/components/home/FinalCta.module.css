@@ -1,0 +1,141 @@
+.section {
+  padding: clamp(3rem, 8vw, 6rem) 0 clamp(5rem, 10vw, 8rem);
+}
+
+/* Always dark: it echoes the product stage in both themes */
+.card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: calc(var(--radius-lg) + 8px);
+  padding: clamp(3.5rem, 8vw, 6.5rem) clamp(1.5rem, 5vw, 4rem);
+  background: var(--stage);
+  color: #f5f7fb;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-lg);
+}
+
+.glow {
+  position: absolute;
+  inset: -40%;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 30% 70%, rgba(14, 165, 233, 0.35), transparent 40%),
+    radial-gradient(circle at 75% 30%, rgba(99, 102, 241, 0.3), transparent 40%);
+  animation: glowSpin 30s linear infinite;
+}
+
+@keyframes glowSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Sound waves: three rings expanding from the center */
+.rings {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.rings span {
+  grid-area: 1 / 1;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  border: 1px solid rgba(125, 211, 252, 0.25);
+  animation: ring 6s var(--ease-out) infinite;
+}
+
+.rings span:nth-child(2) { animation-delay: 2s; }
+.rings span:nth-child(3) { animation-delay: 4s; }
+
+@keyframes ring {
+  from {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.kicker {
+  font-family: var(--font-orbitron);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #7dd3fc;
+}
+
+.title {
+  margin: 1.1rem auto 0;
+  max-width: 16ch;
+  font-size: clamp(2.3rem, 6vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.text {
+  margin: 1.4rem auto 0;
+  max-width: 44ch;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #c3cbd9;
+}
+
+.actions {
+  margin-top: 2.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .secondary:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+}
+
+@media (max-width: 640px) {
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 340px;
+    margin-inline: auto;
+  }
+
+  .rings span {
+    width: 260px;
+    height: 260px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow,
+  .rings span {
+    animation: none;
+  }
+
+  .rings span {
+    opacity: 0.4;
+  }
+
+  .rings span:nth-child(2) { transform: scale(1.5); opacity: 0.25; }
+  .rings span:nth-child(3) { transform: scale(2); opacity: 0.12; }
+}

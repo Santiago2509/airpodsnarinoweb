@@ -1,18 +1,78 @@
-:root {
-  /* Colors */
-  --background: #00050f;
-  --surface: rgba(4, 8, 20, 0.6);
-  --foreground: #f8fafc;
-  --text-muted: #cbd5e1;
-  --text-subtle: #94a3b8;
-  --primary-blue: #3b82f6;
-  --primary-blue-hover: #2563eb;
-  --accent: #38bdf8;
-  --accent-light: #7dd3fc;
-  --accent-cyan: var(--accent);
-  --border: rgba(255, 255, 255, 0.08);
-  --nav-bg: rgba(4, 8, 20, 0.72);
+/* =====================================================================
+   Design tokens — light and dark themes
+   ===================================================================== */
 
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --background: #f4f6fb;
+  --background-elevated: #ffffff;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-strong: #ffffff;
+  --surface-muted: rgba(15, 23, 42, 0.04);
+  --foreground: #0b1220;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
+  --border: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.14);
+
+  --accent: #0a7cff;
+  --accent-strong: #0060d6;
+  --accent-light: #49a6ff;
+  --accent-soft: rgba(10, 124, 255, 0.1);
+  --accent-contrast: #ffffff;
+  --accent-cyan: var(--accent);
+
+  --whatsapp: #1fa855;
+  --whatsapp-strong: #168a45;
+
+  --nav-bg: rgba(255, 255, 255, 0.72);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 30px -12px rgba(15, 23, 42, 0.18), 0 2px 6px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 30px 60px -20px rgba(15, 23, 42, 0.25), 0 8px 20px -8px rgba(15, 23, 42, 0.08);
+
+  --aurora-1: rgba(10, 124, 255, 0.18);
+  --aurora-2: rgba(56, 189, 248, 0.16);
+  --aurora-3: rgba(129, 140, 248, 0.12);
+  --grid-line: rgba(15, 23, 42, 0.05);
+
+  /* The product stage is always dark: the 3D renders and video are shot on black */
+  --stage: #03060d;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --background: #03050b;
+  --background-elevated: #0a0f1c;
+  --surface: rgba(15, 22, 40, 0.6);
+  --surface-strong: #0d1424;
+  --surface-muted: rgba(255, 255, 255, 0.04);
+  --foreground: #f5f7fb;
+  --text-muted: #c3cbd9;
+  --text-subtle: #8a96ab;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --accent: #38bdf8;
+  --accent-strong: #0ea5e9;
+  --accent-light: #7dd3fc;
+  --accent-soft: rgba(56, 189, 248, 0.12);
+  --accent-contrast: #021018;
+
+  --nav-bg: rgba(6, 10, 20, 0.66);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 12px 30px -12px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 30px 70px -20px rgba(0, 0, 0, 0.85);
+
+  --aurora-1: rgba(0, 72, 255, 0.28);
+  --aurora-2: rgba(14, 165, 233, 0.18);
+  --aurora-3: rgba(99, 102, 241, 0.16);
+  --grid-line: rgba(255, 255, 255, 0.04);
+}
+
+:root {
   /* Type */
   --font-montserrat: 'Montserrat', system-ui, -apple-system, sans-serif;
   --font-orbitron: 'Orbitron', system-ui, -apple-system, sans-serif;
@@ -24,6 +84,27 @@
   --duration-press: 160ms;
   --duration-hover: 200ms;
   --duration-ui: 250ms;
+
+  /* Admin panel buttons */
+  --primary-blue: #3b82f6;
+  --primary-blue-hover: #2563eb;
+
+  /* Layout */
+  --page-max: 1200px;
+  --gutter: clamp(1.25rem, 4vw, 2rem);
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --radius-sm: 12px;
+}
+
+/* =====================================================================
+   Base
+   ===================================================================== */
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 html {
@@ -42,12 +123,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  transition: background-color 300ms ease, color 300ms ease;
 }
 
 a {
@@ -71,6 +147,7 @@ a,
 button,
 [role="button"] {
   font: inherit;
+  color: inherit;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -82,12 +159,27 @@ select {
   font-size: 16px;
 }
 
+::selection {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
-/* Shared press feedback for any pressable element */
+/* =====================================================================
+   Utilities
+   ===================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
 .pressable {
   transition: transform var(--duration-press) var(--ease-out);
 }
@@ -96,20 +188,139 @@ select {
   transform: scale(0.97);
 }
 
-/* Prices and counters never jitter */
 .tabular {
   font-variant-numeric: tabular-nums;
 }
 
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Small uppercase label above section titles */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 12px currentColor;
+}
+
+/* Gradient text that works on both themes */
+.gradientText {
+  background: linear-gradient(120deg, var(--foreground) 10%, var(--accent) 60%, var(--accent-light) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Buttons shared by every page */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 52px;
+  padding: 0.85rem 1.75rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-family: var(--font-montserrat);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition:
+    transform var(--duration-press) var(--ease-out),
+    background-color var(--duration-hover) ease,
+    border-color var(--duration-hover) ease,
+    box-shadow var(--duration-hover) ease,
+    color var(--duration-hover) ease;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btnPrimary {
+  background: var(--foreground);
+  color: var(--background);
+  box-shadow: var(--shadow-md);
+}
+
+.btnAccent {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.btnGhost {
+  background: var(--surface);
+  color: var(--foreground);
+  border-color: var(--border-strong);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.btnWhatsapp {
+  background: var(--whatsapp);
+  color: #fff;
+  box-shadow: 0 12px 28px -12px rgba(31, 168, 85, 0.7);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btnPrimary:hover {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .btnAccent:hover {
+    background: var(--accent-strong);
+  }
+
+  .btnGhost:hover {
+    border-color: var(--accent);
+  }
+
+  .btnWhatsapp:hover {
+    background: var(--whatsapp-strong);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  /* Each component swaps its movement for a short fade; this only stops press scaling */
-  .pressable:active {
+  body {
+    transition: none;
+  }
+
+  .pressable:active,
+  .btn:active {
     transform: none;
   }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  :root {
-    --nav-bg: rgba(4, 8, 20, 0.98);
+  :root,
+  [data-theme] {
+    --surface: var(--surface-strong);
+    --nav-bg: var(--background-elevated);
   }
 }

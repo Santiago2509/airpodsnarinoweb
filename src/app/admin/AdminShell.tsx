@@ -46,20 +46,20 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const toaster = <Toaster theme="dark" position="bottom-right" richColors closeButton />;
 
   if (checking) {
-    return <div className={styles.authLoading} aria-busy="true" />;
+    return <div className={styles.authLoading} data-theme="dark" aria-busy="true" />;
   }
 
   if (!session) {
     return (
-      <>
+      <div data-theme="dark">
         <LoginForm />
         {toaster}
-      </>
+      </div>
     );
   }
 
   return (
-    <div className={styles.adminContainer}>
+    <div className={styles.adminContainer} data-theme="dark">
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <p>Admin Panel</p>

@@ -1,0 +1,124 @@
+.section {
+  padding: clamp(4rem, 10vw, 7rem) 0;
+}
+
+.title {
+  margin-top: 0.9rem;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.stepsWrap {
+  position: relative;
+  margin-top: 3.5rem;
+}
+
+.line {
+  position: absolute;
+  border-radius: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.lineH {
+  top: 27px;
+  left: 28px;
+  right: 28px;
+  height: 2px;
+}
+
+.lineV {
+  display: none;
+  top: 28px;
+  bottom: 28px;
+  left: 27px;
+  width: 2px;
+}
+
+.lineFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  transform-origin: left top;
+}
+
+.lineV .lineFill {
+  background: linear-gradient(180deg, var(--accent), var(--accent-light));
+}
+
+.steps {
+  list-style: none;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.number {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--background-elevated);
+  border: 1px solid var(--border-strong);
+  color: var(--accent);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 0.75rem;
+}
+
+.stepIndex {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.stepTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.stepText {
+  max-width: 32ch;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+@media (max-width: 760px) {
+  .lineH {
+    display: none;
+  }
+
+  .lineV {
+    display: block;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .step {
+    padding-left: 76px;
+    position: relative;
+  }
+
+  .number {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+  }
+}

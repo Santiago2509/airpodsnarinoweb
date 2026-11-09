@@ -1,37 +1,121 @@
-.catalogoContainer {
+.page {
   min-height: 100svh;
-  padding: 8rem 1.5rem 5rem;
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
+  padding: calc(8.5rem + env(safe-area-inset-top, 0px)) 0 clamp(4rem, 10vw, 7rem);
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 3.5rem;
-  animation: headerIn 600ms var(--ease-out) both;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .title {
-  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-size: clamp(2.75rem, 7vw, 5.5rem);
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: #fff;
-  margin-bottom: 1rem;
-}
-
-.titleAccent {
-  color: var(--accent);
-  text-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
 }
 
 .subtitle {
+  max-width: 52ch;
+  font-size: 1.1rem;
+  line-height: 1.65;
   color: var(--text-muted);
-  font-size: 1.15rem;
-  line-height: 1.6;
-  max-width: 50ch;
-  margin: 0 auto;
+}
+
+/* ---------- Toolbar ---------- */
+
+.toolbarWrap {
+  position: sticky;
+  top: calc(84px + env(safe-area-inset-top, 0px));
+  z-index: 20;
+  margin: 2.5rem auto 1.75rem;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: var(--shadow-md);
+}
+
+.search {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 1rem;
+  height: 48px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--text-subtle);
+  transition: box-shadow var(--duration-hover) ease;
+}
+
+.search:focus-within {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--foreground);
+  font-family: inherit;
+}
+
+.search input::placeholder {
+  color: var(--text-subtle);
+}
+
+.sorts {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.sortChip {
+  height: 44px;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--duration-hover) ease, color var(--duration-hover) ease;
+}
+
+.sortChip[aria-checked="true"] {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sortChip[aria-checked="false"]:hover {
+    color: var(--foreground);
+    background: var(--surface-muted);
+  }
+}
+
+.count {
+  margin-top: 0.85rem;
+  padding-left: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-subtle);
 }
 
 /* ---------- Grid ---------- */
@@ -39,250 +123,120 @@
 .grid {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+  gap: 1.25rem;
 }
 
-/*
- * Entrance: a short stagger (40ms steps, capped at ~240ms).
- * fill-mode "backwards" only applies the start state before the animation,
- * so it never blocks the hover/press transforms afterwards.
- */
-.card {
+/* Short capped stagger; fill-mode "backwards" never blocks hover transforms afterwards */
+.item {
   display: flex;
-  flex-direction: column;
-  background: rgba(15, 23, 42, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1.5rem;
-  overflow: hidden;
-  animation: cardIn 500ms var(--ease-out) backwards;
-  transition:
-    border-color var(--duration-hover) ease,
-    box-shadow var(--duration-hover) ease;
+  animation: itemIn 500ms var(--ease-out) backwards;
 }
 
-.cardButton {
-  display: flex;
-  flex-direction: column;
+.item > * {
   flex: 1;
+}
+
+@keyframes itemIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.buy {
   width: 100%;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-  user-select: text;
-  -webkit-user-select: text;
-  transition: transform var(--duration-press) var(--ease-out);
+  min-height: 48px;
+  font-size: 0.95rem;
 }
 
-.cardButton:active {
-  transform: scale(0.98);
+.skeleton {
+  height: 480px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--surface-muted), transparent);
 }
 
-.cardButton:focus-visible {
-  outline-offset: -3px;
-  border-radius: 1.5rem 1.5rem 0 0;
-}
-
-.imageContainer {
-  display: block;
-  position: relative;
-  aspect-ratio: 4 / 3;
-  width: 100%;
-  overflow: hidden;
-  background: radial-gradient(circle at 50% 45%, rgba(56, 189, 248, 0.08), transparent 70%);
-}
-
-/* contain: AirPods are never cropped */
-.productImage {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 1.25rem;
-  transition: transform 400ms var(--ease-out);
-}
-
-.cardText {
-  padding: 1.5rem 1.5rem 0.5rem;
+.empty {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  flex: 1;
-  min-width: 0;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 4.5rem 1rem;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-strong);
 }
 
-.productName {
-  display: block;
-  font-size: 1.4rem;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: #fff;
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   overflow-wrap: anywhere;
 }
 
-.productDescription {
+.emptyText {
   color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  margin-bottom: 0.5rem;
 }
 
-.priceContainer {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-top: auto;
+/* ---------- Product modal ---------- */
+
+.modal {
+  max-width: 1040px;
+  border-radius: calc(var(--radius-lg) + 4px);
+  border: 1px solid var(--border);
+  background: var(--background-elevated);
+  color: var(--foreground);
+  box-shadow: var(--shadow-lg);
 }
 
-.price {
-  font-size: 1.9rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #fff;
-}
-
-.currency {
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-.whatsappButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  min-height: 52px;
-  margin: 0.75rem 1.5rem 1.5rem;
-  padding: 0.9rem 1rem;
-  border-radius: 1rem;
-  background-color: #1fa855;
-  background-image: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
-  user-select: none;
-  -webkit-user-select: none;
-  transition:
-    transform var(--duration-press) var(--ease-out),
-    box-shadow var(--duration-hover) ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .card:hover {
-    border-color: rgba(56, 189, 248, 0.3);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.08);
-  }
-
-  .card:hover .productImage {
-    transform: scale(1.04);
-  }
-
-  .whatsappButton:hover {
-    box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
-  }
-}
-
-/* ---------- Loading and empty ---------- */
-
-.skeletonCard {
-  height: 470px;
-  border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.4));
-}
-
-.emptyState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 1.15rem;
-  padding: 4rem 1rem;
-}
-
-.emptyStateLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-height: 48px;
-  padding: 0.75rem 1.5rem;
-  border-radius: 999px;
-  border: 1px solid rgba(37, 211, 102, 0.5);
-  color: #4ade80;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-/* ---------- Modal ---------- */
-
-.modalContent {
-  max-width: 1000px;
-  background: rgba(15, 23, 42, 0.97);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-}
-
-.closeModal {
+.close {
   position: absolute;
   top: 1rem;
   right: 1rem;
   z-index: 10;
   width: 44px;
   height: 44px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--background-elevated);
+  color: var(--foreground);
   cursor: pointer;
-  transition:
-    transform var(--duration-press) var(--ease-out),
-    background-color var(--duration-hover) ease;
 }
 
 .modalGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.05fr 1fr;
 }
 
-.modalGallery {
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.2);
+.gallery {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
+  padding: 1rem;
   min-width: 0;
 }
 
-.modalMainImageContainer {
+.mainImage {
   position: relative;
-  width: 100%;
   aspect-ratio: 1;
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.02);
+  background:
+    radial-gradient(circle at 50% 40%, var(--accent-soft), transparent 70%),
+    var(--surface-muted);
 }
 
 /* Each new photo materializes: opacity + a light blur bridge the swap */
-.modalMainImage {
+.mainImg {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition:
-    opacity 200ms ease,
-    filter 200ms ease;
+  padding: 1.5rem;
+  transition: opacity 200ms ease, filter 200ms ease;
 
   @starting-style {
     opacity: 0;
@@ -290,212 +244,177 @@
   }
 }
 
-.galleryNav {
+.nav {
   position: absolute;
   top: 50%;
   translate: 0 -50%;
   width: 44px;
   height: 44px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.55);
-  color: white;
+  background: var(--background-elevated);
+  color: var(--foreground);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
-  transition:
-    transform var(--duration-press) var(--ease-out),
-    background-color var(--duration-hover) ease;
+  transition: transform var(--duration-press) var(--ease-out);
 }
 
-.galleryNav:active {
-  transform: scale(0.94);
+.nav:active {
+  transform: scale(0.92);
 }
 
-.galleryNavLeft { left: 10px; }
-.galleryNavRight { right: 10px; }
+.navLeft { left: 0.75rem; }
+.navRight { right: 0.75rem; }
 
-.modalThumbnails {
+.thumbs {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.6rem;
   overflow-x: auto;
-  padding: 3px 3px 0.5rem;
+  padding: 3px;
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
 }
 
-.thumbnail {
+.thumb {
   flex-shrink: 0;
-  width: 72px;
-  height: 72px;
+  width: 68px;
+  height: 68px;
   padding: 0;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  cursor: pointer;
   border: 2px solid transparent;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-muted);
   opacity: 0.55;
+  cursor: pointer;
   scroll-snap-align: start;
-  transition:
-    opacity var(--duration-hover) ease,
-    border-color var(--duration-hover) ease;
+  transition: opacity var(--duration-hover) ease, border-color var(--duration-hover) ease;
 }
 
-.thumbnail img {
+.thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.thumbnail[data-active] {
-  border-color: var(--accent);
+.thumb[data-active] {
   opacity: 1;
+  border-color: var(--accent);
 }
 
-.modalDetails {
-  padding: 3.5rem 3rem 2.5rem 1.5rem;
+.details {
   display: flex;
   flex-direction: column;
+  gap: 0.9rem;
+  padding: 3rem 2.5rem 2rem 1.5rem;
   min-width: 0;
 }
 
 .modalTitle {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: white;
-  margin-bottom: 0.75rem;
   padding-right: 2.5rem;
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
   overflow-wrap: anywhere;
 }
 
-.modalPriceContainer {
+.modalPrice {
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
-}
-
-.modalPrice {
-  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  gap: 0.45rem;
+  font-size: clamp(1.8rem, 3.6vw, 2.3rem);
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--accent);
 }
 
-.modalDivider {
+.currency {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-subtle);
+  letter-spacing: 0;
+}
+
+.divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 1.75rem 0;
+  background: var(--border);
+  margin: 0.5rem 0;
 }
 
-.modalDescription {
-  margin-bottom: 2rem;
-}
-
-.modalDescription h3 {
-  color: white;
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-}
-
-.modalDescription p {
-  color: #b4c0d3;
+.description {
+  max-width: 55ch;
+  color: var(--text-muted);
   line-height: 1.7;
   white-space: pre-line;
-  max-width: 60ch;
 }
 
-.modalWhatsappButton {
-  margin-top: auto;
+.perks {
+  list-style: none;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.perks li {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.modalBuy {
+  margin-top: auto;
   width: 100%;
   min-height: 56px;
-  padding: 1rem;
-  border-radius: 1rem;
-  background-color: #1fa855;
-  background-image: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-  color: white;
-  font-weight: 700;
-  font-size: 1.15rem;
-  box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
-  transition:
-    transform var(--duration-press) var(--ease-out),
-    box-shadow var(--duration-hover) ease;
+  font-size: 1.05rem;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .closeModal:hover {
-    background: rgba(255, 255, 255, 0.2);
+@media (max-width: 860px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: var(--radius-md);
   }
 
-  .galleryNav:hover {
-    background: rgba(56, 189, 248, 0.85);
+  .sorts {
+    overflow-x: auto;
   }
 
-  .thumbnail:hover {
-    opacity: 0.9;
+  .sortChip {
+    flex: 1 0 auto;
+    padding: 0 0.75rem;
+    font-size: 0.82rem;
   }
 
-  .modalWhatsappButton:hover {
-    box-shadow: 0 15px 30px rgba(37, 211, 102, 0.4);
+  .toolbarWrap {
+    position: static;
   }
-}
 
-@keyframes headerIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-}
-
-@keyframes cardIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-}
-
-@media (max-width: 768px) {
   .modalGrid {
     grid-template-columns: 1fr;
   }
 
-  .modalGallery {
-    padding: 1.25rem 1.25rem 0;
-    background: transparent;
-  }
-
-  .modalDetails {
-    padding: 1.5rem 1.25rem 1.5rem;
+  .details {
+    padding: 0.5rem 1.25rem 1.5rem;
   }
 
   .modalTitle {
     padding-right: 0;
   }
-
-  .closeModal {
-    top: 0.75rem;
-    right: 0.75rem;
-    background: rgba(0, 0, 0, 0.55);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  @keyframes headerIn {
+  @keyframes itemIn {
     from { opacity: 0; }
   }
 
-  @keyframes cardIn {
-    from { opacity: 0; }
-  }
-
-  .productImage,
-  .modalMainImage {
+  .mainImg {
     transition: none;
   }
 }

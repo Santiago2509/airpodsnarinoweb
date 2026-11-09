@@ -70,6 +70,10 @@ export default function Footer() {
         </div>
       </div>
 
+      <p className={styles.wordmark} aria-hidden="true">
+        AIRPODS<span>NARIÑO</span>
+      </p>
+
       <div className={styles.footerBottom}>
         <div className={styles.container}>
           <div className={styles.bottomContent}>

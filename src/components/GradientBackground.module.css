@@ -1,61 +1,71 @@
 /*
- * Ambient background. The orbs drift very slowly; the blur is painted once
- * on each layer and only `transform` animates, so the GPU just moves layers.
+ * Ambient aurora + a faint grid. The orbs drift very slowly and only
+ * `transform` animates, so the GPU just moves pre-painted layers.
  */
 .root {
   position: fixed;
   inset: 0;
   z-index: -10;
-  background: #00020a;
   overflow: hidden;
   pointer-events: none;
+  background: var(--background);
+  transition: background-color 300ms ease;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
 }
 
 .orb {
   position: absolute;
   border-radius: 50%;
-  opacity: 0.28;
   will-change: transform;
 }
 
 .orb1 {
   width: 70vmax;
   height: 70vmax;
-  background: radial-gradient(circle, #002aaa 0%, #000d40 35%, transparent 70%);
-  top: -25%;
+  background: radial-gradient(circle, var(--aurora-1) 0%, transparent 65%);
+  top: -35%;
   left: -20%;
-  animation: moveOrb1 40s ease-in-out infinite alternate;
+  animation: drift1 40s ease-in-out infinite alternate;
 }
 
 .orb2 {
   width: 60vmax;
   height: 60vmax;
-  background: radial-gradient(circle, #0038c0 0%, #001050 35%, transparent 70%);
-  bottom: -20%;
-  right: -15%;
-  animation: moveOrb2 48s ease-in-out infinite alternate;
+  background: radial-gradient(circle, var(--aurora-2) 0%, transparent 65%);
+  top: -10%;
+  right: -25%;
+  animation: drift2 48s ease-in-out infinite alternate;
 }
 
 .orb3 {
-  width: 50vmax;
-  height: 50vmax;
-  background: radial-gradient(circle, #001e80 0%, #000a30 35%, transparent 70%);
-  top: 30%;
-  left: 30%;
-  opacity: 0.12;
-  animation: moveOrb3 44s ease-in-out infinite alternate;
+  width: 55vmax;
+  height: 55vmax;
+  background: radial-gradient(circle, var(--aurora-3) 0%, transparent 65%);
+  bottom: -30%;
+  left: 20%;
+  animation: drift3 44s ease-in-out infinite alternate;
 }
 
-@keyframes moveOrb1 {
-  to { transform: translate(8vw, 14vh); }
+@keyframes drift1 {
+  to { transform: translate(8vw, 12vh); }
 }
 
-@keyframes moveOrb2 {
-  to { transform: translate(-10vw, -16vh); }
+@keyframes drift2 {
+  to { transform: translate(-10vw, 14vh); }
 }
 
-@keyframes moveOrb3 {
-  to { transform: translate(6vw, -8vh); }
+@keyframes drift3 {
+  to { transform: translate(6vw, -10vh); }
 }
 
 @media (prefers-reduced-motion: reduce) {

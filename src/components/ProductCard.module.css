@@ -1,0 +1,179 @@
+.card {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--background-elevated);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    border-color var(--duration-hover) ease,
+    box-shadow 300ms ease,
+    transform 300ms var(--ease-out);
+}
+
+.spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(420px circle at var(--mx) var(--my), var(--accent-soft), transparent 60%);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.hit {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  user-select: text;
+  -webkit-user-select: text;
+  transition: transform var(--duration-press) var(--ease-out);
+}
+
+.hit:active {
+  transform: scale(0.985);
+}
+
+.hit:focus-visible {
+  outline-offset: -4px;
+  border-radius: var(--radius-lg);
+}
+
+.media {
+  position: relative;
+  display: block;
+  margin: 10px 10px 0;
+  aspect-ratio: 1 / 1;
+  border-radius: calc(var(--radius-lg) - 8px);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 40%, var(--accent-soft), transparent 70%),
+    var(--surface-muted);
+}
+
+/* contain: products are never cropped */
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 1.5rem;
+  transition: transform 500ms var(--ease-out);
+}
+
+.open {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--background-elevated);
+  color: var(--foreground);
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex: 1;
+  min-width: 0;
+  padding: 1.1rem 1.4rem 1.4rem;
+}
+
+.name {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.priceRow {
+  margin-top: auto;
+  padding-top: 0.4rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.price {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.currency {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-subtle);
+}
+
+.footer {
+  padding: 0 1.4rem 1.4rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+
+  .card:hover .spotlight,
+  .card:hover .open {
+    opacity: 1;
+  }
+
+  .card:hover .open {
+    transform: none;
+  }
+
+  .card:hover .image {
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .image,
+  .open {
+    transition-property: opacity, border-color, box-shadow;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  .card:hover .image {
+    transform: none;
+  }
+}

@@ -1,51 +1,42 @@
 .hero {
-  padding: 9rem 1.5rem 4rem;
-  text-align: center;
-  animation: pageHeroIn 600ms var(--ease-out) both;
-}
-
-@keyframes pageHeroIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
+  padding-top: calc(8.5rem + env(safe-area-inset-top, 0px));
+  padding-bottom: clamp(2.5rem, 6vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .title {
-  font-family: var(--font-orbitron), system-ui, sans-serif;
-  font-size: clamp(2.25rem, 5vw, 4rem);
+  max-width: 14ch;
+  font-size: clamp(2.75rem, 7vw, 5.5rem);
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  color: #fff;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
   text-wrap: balance;
 }
 
-.titleAccent {
-  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.flareDivider {
-  width: min(70vw, 300px);
-  height: 2px;
-  margin: 1.5rem auto;
-  background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.5) 25%, #ffffff 50%, rgba(56, 189, 248, 0.5) 75%, transparent 100%);
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
-}
-
 .subtitle {
+  max-width: 52ch;
+  font-size: 1.1rem;
+  line-height: 1.65;
   color: var(--text-muted);
-  font-size: 1.15rem;
-  line-height: 1.6;
-  max-width: 55ch;
-  margin: 0 auto;
+}
+
+.enter {
+  animation: heroIn 700ms var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  @keyframes pageHeroIn {
+  @keyframes heroIn {
     from { opacity: 0; }
   }
 }

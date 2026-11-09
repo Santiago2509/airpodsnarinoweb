@@ -1,15 +1,25 @@
 "use client";
 
 import { useMemo, useState, useSyncExternalStore } from "react";
+import { motion } from "motion/react";
+import { MessageCircle, X, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useProductStore } from "@/store/useProductStore";
-import styles from "./catalogo.module.css";
-import { MessageCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Product } from "@/lib/types";
 import Modal from "@/components/Modal";
+import ProductCard from "@/components/ProductCard";
 import { PLACEHOLDER_IMAGE, formatPrice, whatsappUrl } from "@/lib/site";
+import styles from "./catalogo.module.css";
 
-const STAGGER_MS = 40;
-const STAGGER_MAX_STEPS = 6;
+type Sort = "recent" | "price-asc" | "price-desc";
+
+const SORTS: { value: Sort; label: string }[] = [
+  { value: "recent", label: "Novedades" },
+  { value: "price-asc", label: "Menor precio" },
+  { value: "price-desc", label: "Mayor precio" },
+];
+
+const ease = [0.23, 1, 0.32, 1] as const;
+const noopSubscribe = () => () => {};
 
 function getProductImages(product: Product) {
   const images = [...(product.images ?? [])];
@@ -21,14 +31,19 @@ function buyMessage(name: string) {
   return `¡Hola! Estoy interesado en comprar ${name}. ¿Me podrías dar más información?`;
 }
 
-const noopSubscribe = () => () => {};
-
 function fallbackImage(e: React.SyntheticEvent<HTMLImageElement>) {
   if (!e.currentTarget.src.endsWith(PLACEHOLDER_IMAGE)) e.currentTarget.src = PLACEHOLDER_IMAGE;
 }
 
+function normalize(text: string) {
+  return text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+}
+
 export default function CatalogoPage() {
   const { products, isLoading, hasLoadedProducts } = useProductStore();
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<Sort>("recent");
+
   // undefined = untouched, so a link like /catalogo?producto=<id> opens that product
   const [selectedId, setSelectedId] = useState<string | null | undefined>(undefined);
   const productFromUrl = useSyncExternalStore(
@@ -39,10 +54,18 @@ export default function CatalogoPage() {
   const activeId = selectedId === undefined ? productFromUrl : selectedId;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const available = useMemo(
-    () => products.filter((p) => p.status === "active" && p.stock > 0),
-    [products]
-  );
+  const available = useMemo(() => products.filter((p) => p.status === "active" && p.stock > 0), [products]);
+
+  const visible = useMemo(() => {
+    const q = normalize(query.trim());
+    const list = q
+      ? available.filter((p) => normalize(`${p.name} ${p.description}`).includes(q))
+      : [...available];
+    if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
+    if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
+    return list;
+  }, [available, query, sort]);
+
   const selectedProduct = available.find((p) => p.id === activeId) ?? null;
   const images = selectedProduct ? getProductImages(selectedProduct) : [];
 
@@ -61,143 +84,171 @@ export default function CatalogoPage() {
     }
   };
 
-  const showImage = (index: number) => {
-    setCurrentImageIndex((index + images.length) % images.length);
-  };
-
+  const showImage = (index: number) => setCurrentImageIndex((index + images.length) % images.length);
   const loading = isLoading && !hasLoadedProducts;
+  const countLabel = new Intl.PluralRules("es-CO").select(visible.length) === "one" ? "producto" : "productos";
 
   return (
-    <main className={styles.catalogoContainer}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>
-          Nuestro <span className={styles.titleAccent}>Catálogo</span>
-        </h1>
-        <p className={styles.subtitle}>
-          Descubre nuestra selección de productos con la mejor calidad y precio.
-        </p>
+    <main className={styles.page}>
+      <header className={`container ${styles.header}`}>
+        <motion.p
+          className="eyebrow"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease }}
+        >
+          Catálogo
+        </motion.p>
+        <motion.h1
+          className={styles.title}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease, delay: 0.05 }}
+        >
+          Encuentra tu <span className="gradientText">sonido.</span>
+        </motion.h1>
+        <motion.p
+          className={styles.subtitle}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease, delay: 0.12 }}
+        >
+          Audífonos y accesorios Apple con garantía directa. Toca un producto para ver sus fotos y
+          compra en un clic por WhatsApp.
+        </motion.p>
       </header>
 
-      {loading ? (
-        <div className={styles.grid} aria-busy="true" aria-label="Cargando productos">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className={styles.skeletonCard} />
-          ))}
-        </div>
-      ) : available.length === 0 ? (
-        <div className={styles.emptyState}>
-          <p>No hay productos disponibles en este momento.</p>
-          <a
-            href={whatsappUrl("Hola, ¿qué productos tienen disponibles?")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${styles.emptyStateLink} pressable`}
-          >
-            <MessageCircle size={18} aria-hidden="true" />
-            Pregúntanos por WhatsApp
-          </a>
-        </div>
-      ) : (
-        <ul className={styles.grid}>
-          {available.map((product, index) => (
-            <li
-              key={product.id}
-              className={styles.card}
-              style={{ animationDelay: `${Math.min(index, STAGGER_MAX_STEPS) * STAGGER_MS}ms` }}
-            >
+      <div className={`container ${styles.toolbarWrap}`}>
+        <div className={styles.toolbar}>
+          <label className={styles.search}>
+            <Search size={18} aria-hidden="true" />
+            <span className="srOnly">Buscar productos</span>
+            <input
+              type="search"
+              placeholder="Buscar AirPods, cargadores…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              enterKeyHint="search"
+              autoComplete="off"
+            />
+          </label>
+          <div className={styles.sorts} role="radiogroup" aria-label="Ordenar">
+            {SORTS.map((s) => (
               <button
+                key={s.value}
                 type="button"
-                className={styles.cardButton}
-                onClick={() => openModal(product)}
+                role="radio"
+                aria-checked={sort === s.value}
+                className={styles.sortChip}
+                onClick={() => setSort(s.value)}
               >
-                <span className={styles.imageContainer}>
-                  {/* eslint-disable-next-line @next/next/no-img-element -- remote Supabase URLs */}
-                  <img
-                    src={product.imageUrl || PLACEHOLDER_IMAGE}
-                    alt=""
-                    loading={index < 6 ? "eager" : "lazy"}
-                    decoding="async"
-                    className={styles.productImage}
-                    onError={fallbackImage}
-                  />
-                </span>
-                <span className={styles.cardText}>
-                  <span className={styles.productName}>{product.name}</span>
-                  <span className={styles.productDescription}>{product.description}</span>
-                  <span className={styles.priceContainer}>
-                    <span className={`${styles.price} tabular`}>{formatPrice(product.price)}</span>
-                    <span className={styles.currency}>COP</span>
-                  </span>
-                </span>
+                {s.label}
               </button>
+            ))}
+          </div>
+        </div>
+        {!loading && available.length > 0 && (
+          <p className={styles.count} aria-live="polite">
+            <span className="tabular">{visible.length}</span> {countLabel}
+          </p>
+        )}
+      </div>
 
-              <a
-                href={whatsappUrl(buyMessage(product.name))}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`${styles.whatsappButton} pressable`}
+      <div className="container">
+        {loading ? (
+          <div className={styles.grid} aria-busy="true" aria-label="Cargando productos">
+            {Array.from({ length: 6 }, (_, i) => (
+              <div key={i} className={styles.skeleton} />
+            ))}
+          </div>
+        ) : visible.length === 0 ? (
+          <div className={styles.empty}>
+            <p className={styles.emptyTitle}>
+              {available.length === 0 ? "Pronto tendremos productos aquí." : `No encontramos “${query}”.`}
+            </p>
+            <p className={styles.emptyText}>Escríbenos y te contamos qué tenemos disponible hoy.</p>
+            <a
+              href={whatsappUrl("Hola, ¿qué productos tienen disponibles?")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btnWhatsapp"
+            >
+              <MessageCircle size={18} aria-hidden="true" />
+              Preguntar por WhatsApp
+            </a>
+          </div>
+        ) : (
+          <ul className={styles.grid}>
+            {visible.map((product, index) => (
+              <li
+                key={product.id}
+                className={styles.item}
+                style={{ animationDelay: `${Math.min(index, 6) * 40}ms` }}
               >
-                <MessageCircle size={20} aria-hidden="true" />
-                <span>Comprar por WhatsApp</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+                <ProductCard product={product} onSelect={() => openModal(product)} eager={index < 6}>
+                  <a
+                    href={whatsappUrl(buyMessage(product.name))}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`btn btnWhatsapp ${styles.buy}`}
+                  >
+                    <MessageCircle size={18} aria-hidden="true" />
+                    Comprar por WhatsApp
+                  </a>
+                </ProductCard>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-      <Modal
-        open={selectedProduct !== null}
-        onClose={closeModal}
-        labelledBy="product-modal-title"
-        className={styles.modalContent}
-      >
+      <Modal open={selectedProduct !== null} onClose={closeModal} labelledBy="product-modal-title" className={styles.modal}>
         {selectedProduct && (
           <>
-            <button type="button" className={`${styles.closeModal} pressable`} onClick={closeModal} aria-label="Cerrar">
-              <X size={22} aria-hidden="true" />
+            <button type="button" className={`${styles.close} pressable`} onClick={closeModal} aria-label="Cerrar">
+              <X size={20} aria-hidden="true" />
             </button>
 
             <div className={styles.modalGrid}>
-              <div className={styles.modalGallery}>
-                <div className={styles.modalMainImageContainer}>
-                  {/* Keyed by index: each new photo fades in over the previous one */}
+              <div className={styles.gallery}>
+                <div className={styles.mainImage}>
                   {/* eslint-disable-next-line @next/next/no-img-element -- remote Supabase URLs */}
                   <img
                     key={images[currentImageIndex]}
                     src={images[currentImageIndex]}
                     alt={`${selectedProduct.name}, foto ${currentImageIndex + 1} de ${images.length}`}
-                    className={styles.modalMainImage}
+                    className={styles.mainImg}
                     onError={fallbackImage}
                   />
                   {images.length > 1 && (
                     <>
                       <button
                         type="button"
-                        className={`${styles.galleryNav} ${styles.galleryNavLeft}`}
+                        className={`${styles.nav} ${styles.navLeft}`}
                         onClick={() => showImage(currentImageIndex - 1)}
                         aria-label="Foto anterior"
                       >
-                        <ChevronLeft size={22} aria-hidden="true" />
+                        <ChevronLeft size={20} aria-hidden="true" />
                       </button>
                       <button
                         type="button"
-                        className={`${styles.galleryNav} ${styles.galleryNavRight}`}
+                        className={`${styles.nav} ${styles.navRight}`}
                         onClick={() => showImage(currentImageIndex + 1)}
                         aria-label="Foto siguiente"
                       >
-                        <ChevronRight size={22} aria-hidden="true" />
+                        <ChevronRight size={20} aria-hidden="true" />
                       </button>
                     </>
                   )}
                 </div>
 
                 {images.length > 1 && (
-                  <div className={styles.modalThumbnails}>
+                  <div className={styles.thumbs}>
                     {images.map((img, idx) => (
                       <button
                         type="button"
                         key={img}
-                        className={styles.thumbnail}
+                        className={styles.thumb}
                         data-active={idx === currentImageIndex ? "" : undefined}
                         aria-label={`Ver foto ${idx + 1}`}
                         aria-current={idx === currentImageIndex ? "true" : undefined}
@@ -211,28 +262,28 @@ export default function CatalogoPage() {
                 )}
               </div>
 
-              <div className={styles.modalDetails}>
+              <div className={styles.details}>
+                <p className="eyebrow">Disponible</p>
                 <h2 id="product-modal-title" className={styles.modalTitle}>{selectedProduct.name}</h2>
-                <div className={styles.modalPriceContainer}>
-                  <span className={`${styles.modalPrice} tabular`}>{formatPrice(selectedProduct.price)}</span>
+                <p className={styles.modalPrice}>
+                  <span className="tabular">{formatPrice(selectedProduct.price)}</span>
                   <span className={styles.currency}>COP</span>
-                </div>
-
-                <div className={styles.modalDivider} />
-
-                <div className={styles.modalDescription}>
-                  <h3>Descripción</h3>
-                  <p>{selectedProduct.description}</p>
-                </div>
-
+                </p>
+                <div className={styles.divider} />
+                <p className={styles.description}>{selectedProduct.description}</p>
+                <ul className={styles.perks}>
+                  <li>Garantía directa</li>
+                  <li>Envío a todo Nariño</li>
+                  <li>Asesoría por WhatsApp</li>
+                </ul>
                 <a
                   href={whatsappUrl(buyMessage(selectedProduct.name))}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`${styles.modalWhatsappButton} pressable`}
+                  className={`btn btnWhatsapp ${styles.modalBuy}`}
                 >
-                  <MessageCircle size={22} aria-hidden="true" />
-                  <span>Comprar por WhatsApp</span>
+                  <MessageCircle size={20} aria-hidden="true" />
+                  Comprar por WhatsApp
                 </a>
               </div>
             </div>
