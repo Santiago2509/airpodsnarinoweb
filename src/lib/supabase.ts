@@ -4,10 +4,19 @@ import { createClient } from '@supabase/supabase-js';
 // NEXT_PUBLIC_SUPABASE_URL=https://TU_PROJECT_ID.supabase.co
 // NEXT_PUBLIC_SUPABASE_ANON_KEY=TU_ANON_KEY
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+if (!supabaseUrl || !supabaseAnonKey) {
+  // Without the variables (e.g. a Vercel preview with Production-only env vars)
+  // the site still builds; data requests just fail until they are set.
+  console.warn("Faltan NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY");
+}
+
+export const supabase = createClient(
+  supabaseUrl || "https://placeholder.supabase.co",
+  supabaseAnonKey || "placeholder-anon-key"
+);
 
 // Nombre del bucket en Supabase Storage
 export const BUCKET_NAME = 'product-images';
