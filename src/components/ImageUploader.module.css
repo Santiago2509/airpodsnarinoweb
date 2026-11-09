@@ -48,18 +48,14 @@
   color: white;
   border: none;
   border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  font-size: 0.75rem;
+  width: 28px;
+  height: 28px;
+  font-size: 0.8rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
-}
-
-.removeBtn:hover {
-  background: #ef4444;
+  transition: background-color 150ms ease;
 }
 
 .addCard {
@@ -73,12 +69,22 @@
   justify-content: center;
   gap: 0.4rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
 
-.addCard:hover {
+.addCard:focus-within {
   border-color: rgba(56, 189, 248, 0.8);
-  background: rgba(56, 189, 248, 0.08);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .removeBtn:hover {
+    background: #ef4444;
+  }
+
+  .addCard:hover {
+    border-color: rgba(56, 189, 248, 0.8);
+    background: rgba(56, 189, 248, 0.08);
+  }
 }
 
 .addIcon {
@@ -116,4 +122,17 @@
   font-size: 0.8rem;
   color: #64748b;
   line-height: 1.5;
+}
+
+/* Visually hidden but still reachable with the keyboard */
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.addCard {
+  position: relative;
 }

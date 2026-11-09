@@ -71,7 +71,8 @@ export default function ImageUploader({ productId, existingImages = [], onChange
     <div className={styles.container}>
       <div className={styles.grid}>
         {images.map((url, idx) => (
-          <div key={idx} className={styles.imageCard}>
+          <div key={url} className={styles.imageCard}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- remote Supabase URLs */}
             <img src={url} alt={`Imagen ${idx + 1}`} className={styles.image} />
             {idx === 0 && <span className={styles.mainBadge}>Principal</span>}
             <button
@@ -79,6 +80,7 @@ export default function ImageUploader({ productId, existingImages = [], onChange
               className={styles.removeBtn}
               onClick={() => removeImage(idx)}
               title="Eliminar imagen"
+              aria-label={`Eliminar imagen ${idx + 1}`}
             >
               ✕
             </button>
@@ -88,7 +90,7 @@ export default function ImageUploader({ productId, existingImages = [], onChange
         {images.length < MAX_IMAGES && (
           <label className={styles.addCard}>
             {uploading ? (
-              <div className={styles.spinner} />
+              <div className={styles.spinner} role="status" aria-label="Subiendo" />
             ) : (
               <>
                 <span className={styles.addIcon}>+</span>
@@ -104,7 +106,7 @@ export default function ImageUploader({ productId, existingImages = [], onChange
               multiple
               onChange={handleFileChange}
               disabled={uploading}
-              style={{ display: "none" }}
+              className={styles.fileInput}
             />
           </label>
         )}

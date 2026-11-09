@@ -18,10 +18,11 @@ export default function Test3D() {
 
     for (let i = 1; i <= frameCount; i++) {
       const img = new Image();
-      // Aseguramos el formato 00001.png a 00192.png
-      const frameNum = i.toString().padStart(5, "0");
-      img.src = `/3d/${frameNum}.png`;
-      img.onload = () => {
+      // Frames optimizados: /3d/desktop/001.webp a 192.webp
+      const frameNum = i.toString().padStart(3, "0");
+      img.src = `/3d/desktop/${frameNum}.webp`;
+      // Count failed frames too, so one missing file never blocks the page
+      img.onload = img.onerror = () => {
         loadedCount++;
         if (loadedCount === frameCount) {
           setImages(loadedImages);
@@ -44,8 +45,10 @@ export default function Test3D() {
 
     // Pintar el primer frame
     const render = (index: number) => {
+      const img = images[index];
+      if (!img?.naturalWidth) return;
       context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(images[index], 0, 0, canvas.width, canvas.height);
+      context.drawImage(img, 0, 0, canvas.width, canvas.height);
     };
 
     render(0);
@@ -64,7 +67,7 @@ export default function Test3D() {
       requestAnimationFrame(() => render(frameIndex));
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, images]);
 
@@ -80,8 +83,8 @@ export default function Test3D() {
         ) : (
           <canvas 
             ref={canvasRef} 
-            width={1920} 
-            height={1080} 
+            width={1280}
+            height={720}
             className={styles.canvas} 
           />
         )}

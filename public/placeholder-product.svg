@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" fill="#0b1324"/>
+  <g fill="none" stroke="#38bdf8" stroke-opacity="0.55" stroke-width="6" stroke-linecap="round">
+    <path d="M150 150v70a20 20 0 0 0 40 0v-40"/>
+    <path d="M250 150v70a20 20 0 0 1-40 0v-40"/>
+    <circle cx="170" cy="150" r="22"/>
+    <circle cx="230" cy="150" r="22"/>
+  </g>
+  <text x="200" y="300" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="600" fill="#94a3b8">Airpods Nariño</text>
+</svg>

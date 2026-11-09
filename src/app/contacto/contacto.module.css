@@ -1,49 +1,17 @@
 .main {
-  min-height: 100vh;
+  min-height: 100svh;
   padding-bottom: 5rem;
 }
 
-.hero {
-  padding: 10rem 2rem 5rem;
-  text-align: center;
-  position: relative;
-  animation: fadeIn 1s ease-out;
-}
 
-.title {
-  font-family: var(--font-orbitron), system-ui, sans-serif;
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
-  margin: 0;
-  color: #fff;
-}
 
-.titleAccent {
-  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
 
-.flareDivider {
-  width: min(70vw, 300px);
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.5) 25%, #ffffff 50%, rgba(56, 189, 248, 0.5) 75%, transparent 100%);
-  margin: 1.5rem auto;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
-}
 
-.subtitle {
-  color: #cbd5e1;
-  font-size: 1.2rem;
-  max-width: 600px;
-  margin: 0 auto;
-}
 
 .contentContainer {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -59,7 +27,9 @@
   align-items: center;
   text-decoration: none;
   color: white;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform var(--duration-press) var(--ease-out),
+    box-shadow var(--duration-hover) ease;
   box-shadow: 0 10px 30px rgba(18, 140, 126, 0.3);
   position: relative;
   overflow: hidden;
@@ -71,19 +41,31 @@
   top: 0; left: 0; right: 0; bottom: 0;
   background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
   transform: translateX(-100%);
-  transition: transform 0.6s ease;
+  transition: transform 600ms var(--ease-in-out);
 }
 
-.whatsappCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(18, 140, 126, 0.4);
+.whatsappCard:active,
+.socialCard:active {
+  transform: scale(0.98);
 }
 
-.whatsappCard:hover::before {
-  transform: translateX(100%);
+@media (hover: hover) and (pointer: fine) {
+  .whatsappCard:hover {
+    box-shadow: 0 15px 40px rgba(18, 140, 126, 0.45);
+  }
+
+  .whatsappCard:hover::before {
+    transform: translateX(100%);
+  }
+
+  .socialCard:hover {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
 }
 
 .whatsappContent {
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -99,7 +81,8 @@
   font-size: 1.2rem;
   opacity: 0.9;
   font-family: var(--font-orbitron), sans-serif;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
 }
 
 .whatsappAction {
@@ -108,7 +91,7 @@
   background: rgba(255, 255, 255, 0.2);
   padding: 0.8rem 1.5rem;
   border-radius: 50px;
-  backdrop-filter: blur(10px);
+  white-space: nowrap;
 }
 
 /* Grid for social links */
@@ -129,14 +112,10 @@
   align-items: center;
   text-align: center;
   text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.socialCard:hover {
-  background: rgba(30, 41, 59, 0.6);
-  transform: translateY(-5px);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition:
+    transform var(--duration-press) var(--ease-out),
+    background-color var(--duration-hover) ease,
+    border-color var(--duration-hover) ease;
 }
 
 .socialIconWrapper {
@@ -166,10 +145,6 @@
   font-size: 1rem;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 
 @media (max-width: 768px) {
   .whatsappCard {
@@ -181,5 +156,15 @@
   
   .whatsappContent {
     flex-direction: column;
+  }
+
+  .whatsappContent h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whatsappCard::before {
+    display: none;
   }
 }

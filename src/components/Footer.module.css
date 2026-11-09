@@ -27,6 +27,7 @@
   font-family: var(--font-orbitron), sans-serif;
   font-size: 1.8rem;
   font-weight: 800;
+  letter-spacing: -0.02em;
   color: #ffffff;
   margin-bottom: 1rem;
 }
@@ -39,6 +40,7 @@
   line-height: 1.6;
   margin-bottom: 1.5rem;
   font-size: 0.95rem;
+  max-width: 42ch;
 }
 
 .badge {
@@ -54,9 +56,13 @@
   font-weight: 600;
 }
 
+.badgeIcon {
+  flex-shrink: 0;
+}
+
 .sectionTitle {
   color: #ffffff;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
   text-transform: uppercase;
@@ -72,14 +78,15 @@
   gap: 1rem;
 }
 
-.linkList a {
+.linkList a,
+.contactList a {
   color: #cbd5e1;
-  transition: color 0.3s ease;
+  transition: color var(--duration-hover) ease;
   font-size: 0.95rem;
 }
 
-.linkList a:hover {
-  color: var(--accent-cyan);
+.email {
+  overflow-wrap: anywhere;
 }
 
 .contactList li {
@@ -103,22 +110,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
   border-radius: 50%;
+  width: 44px;
+  height: 44px;
   background: rgba(255, 255, 255, 0.05);
   color: #ffffff;
-  transition: all 0.3s ease;
+  transition:
+    background-color var(--duration-hover) ease,
+    color var(--duration-hover) ease,
+    transform var(--duration-press) var(--ease-out);
 }
 
-.socialIcon:hover {
-  background: var(--accent-cyan);
-  color: #02040a;
-  transform: translateY(-3px);
+.socialIcon:active {
+  transform: scale(0.94);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .linkList a:hover,
+  .contactList a:hover {
+    color: var(--accent-cyan);
+  }
+
+  .socialIcon:hover {
+    background: var(--accent-cyan);
+    color: #02040a;
+  }
 }
 
 .footerBottom {
-  padding: 1.5rem 0;
+  padding: 1.5rem 0 calc(1.5rem + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   background: rgba(0, 0, 0, 0.2);
 }

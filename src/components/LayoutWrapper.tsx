@@ -9,21 +9,23 @@ import { useProductStore } from "@/store/useProductStore";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith("/admin");
+  const isAdmin = pathname?.startsWith("/admin") ?? false;
   const is3DTest = pathname === "/3d-test";
-  const { fetchProducts, fetchTransactions } = useProductStore();
+  const fetchProducts = useProductStore((s) => s.fetchProducts);
 
+  // Visitors only download the public catalog. The admin panel loads its own data.
   useEffect(() => {
-    fetchProducts();
-    fetchTransactions();
-  }, [fetchProducts, fetchTransactions]);
+    if (!isAdmin) fetchProducts();
+  }, [isAdmin, fetchProducts]);
+
+  if (isAdmin) return <>{children}</>;
 
   return (
     <>
-      {!isAdmin && <Navbar />}
+      <Navbar />
       {children}
-      {!isAdmin && !is3DTest && <Footer />}
-      {!isAdmin && <FloatingWhatsApp />}
+      {!is3DTest && <Footer />}
+      <FloatingWhatsApp />
     </>
   );
 }

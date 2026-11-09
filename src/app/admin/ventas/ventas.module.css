@@ -2,12 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .title {
@@ -20,8 +14,7 @@
   background: rgba(30, 41, 59, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1rem;
-  overflow: hidden;
-  backdrop-filter: blur(10px);
+  overflow-x: auto;
 }
 
 .table {
@@ -49,7 +42,29 @@
   border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 600;
-  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--text-subtle);
+  white-space: nowrap;
+}
+
+.strong {
+  font-weight: 600;
+}
+
+.total {
+  color: #38bdf8;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.notes {
+  color: var(--text-subtle);
+  font-size: 0.9rem;
+  max-width: 28ch;
+  overflow-wrap: anywhere;
 }
 
 .typeSale {
@@ -74,15 +89,10 @@
   font-size: 1.1rem;
 }
 @media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
-  .tableContainer {
-    overflow-x: auto;
+  .title {
+    font-size: 1.6rem;
   }
   .table {
-    min-width: 600px;
+    min-width: 720px;
   }
 }

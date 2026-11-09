@@ -2,6 +2,7 @@
 
 import { useProductStore } from "@/store/useProductStore";
 import styles from "./ventas.module.css";
+import { formatPrice } from "@/lib/site";
 
 export default function VentasHistory() {
   const { transactions } = useProductStore();
@@ -60,21 +61,19 @@ export default function VentasHistory() {
             <tbody>
               {transactions.map((tx) => (
                 <tr key={tx.id}>
-                  <td style={{ color: "#94a3b8" }}>{formatDate(tx.date)}</td>
-                  <td style={{ fontWeight: 600 }}>{tx.productName}</td>
+                  <td className={`${styles.muted} tabular`}>{formatDate(tx.date)}</td>
+                  <td className={styles.strong}>{tx.productName}</td>
                   <td>
                     <span className={`${styles.typeBadge} ${getTypeStyle(tx.type)}`}>
                       {getTypeLabel(tx.type)}
                     </span>
                   </td>
-                  <td style={{ fontWeight: 700 }}>
+                  <td className={`${styles.strong} tabular`}>
                     {tx.type === 'return' ? '+' : '-'}{tx.quantity}
                   </td>
-                  <td>${tx.priceAtTransaction.toLocaleString("es-CO")}</td>
-                  <td style={{ color: "#38bdf8", fontWeight: "bold" }}>
-                    ${tx.totalAmount.toLocaleString("es-CO")}
-                  </td>
-                  <td style={{ color: "#94a3b8", fontSize: "0.9rem" }}>{tx.notes || "-"}</td>
+                  <td className="tabular">{formatPrice(tx.priceAtTransaction)}</td>
+                  <td className={`${styles.total} tabular`}>{formatPrice(tx.totalAmount)}</td>
+                  <td className={styles.notes}>{tx.notes || "—"}</td>
                 </tr>
               ))}
             </tbody>

@@ -2,27 +2,64 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  animation: fadeIn 0.5s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .title {
   font-size: 2rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
   color: #fff;
+}
+
+.clock {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 1rem;
+  background: rgba(2, 4, 10, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.clockIcon {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.clockText {
+  display: flex;
+  flex-direction: column;
+}
+
+.clockTime {
+  color: #f8fafc;
+  font-weight: 700;
+  font-size: 1.1rem;
+  font-family: var(--font-orbitron);
+}
+
+.clockDate {
+  color: var(--text-subtle);
+  font-size: 0.8rem;
+  text-transform: uppercase;
 }
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
   gap: 1.5rem;
 }
 
 .statCard {
+  --tone: #3b82f6;
   background: rgba(30, 41, 59, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1rem;
@@ -30,49 +67,60 @@
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  backdrop-filter: blur(10px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.statCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+.statCard[data-tone="sky"] { --tone: #38bdf8; }
+.statCard[data-tone="violet"] { --tone: #a855f7; }
+.statCard[data-tone="green"] { --tone: #4ade80; }
+.statCard[data-tone="cyan"] { --tone: #22d3ee; }
+.statCard[data-tone="red"] { --tone: #ef4444; }
+
+.statCard[data-highlight] {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border-left: 4px solid var(--tone);
 }
 
 .statIconWrapper {
-  background: rgba(59, 130, 246, 0.1);
+  flex-shrink: 0;
   padding: 1rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: color-mix(in srgb, var(--tone) 12%, transparent);
 }
 
 .statIcon {
-  color: #3b82f6;
+  color: var(--tone);
 }
 
 .statInfo {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  min-width: 0;
 }
 
 .statLabel {
   font-size: 0.875rem;
-  color: #cbd5e1;
+  color: var(--text-muted);
 }
 
 .statValue {
   font-size: 1.5rem;
   font-weight: 700;
   color: #fff;
+  overflow-wrap: anywhere;
+}
+
+.statSub {
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+  font-weight: 400;
 }
 
 @media (max-width: 768px) {
-  .headerRow {
-    flex-direction: column !important;
-    gap: 1rem;
-    align-items: flex-start !important;
+  .title {
+    font-size: 1.6rem;
   }
 }

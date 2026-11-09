@@ -1,26 +1,53 @@
+/* Fixed height: the bar changes material on scroll, never its size */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  transition: all 0.4s ease;
-  padding: 1.5rem 0;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: transparent;
+  transition:
+    background-color var(--duration-ui) ease,
+    box-shadow var(--duration-ui) ease;
 }
 
-.navbar.scrolled {
-  background: rgba(4, 8, 20, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+.navbar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  opacity: 0;
+  transition: opacity var(--duration-ui) ease;
+}
+
+/* Soft scroll-edge instead of a hard divider */
+.navbar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 24px;
+  background: linear-gradient(to bottom, rgba(0, 5, 15, 0.45), transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-ui) ease;
+}
+
+.navbar[data-scrolled]::before,
+.navbar[data-scrolled]::after {
+  opacity: 1;
 }
 
 .container {
   max-width: 1200px;
+  height: 72px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 max(1.5rem, env(safe-area-inset-left, 0px));
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -29,134 +56,184 @@
 .logo {
   font-size: 1.5rem;
   font-weight: 800;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.02em;
   color: var(--foreground);
 }
 
 .logoAccent {
-  color: var(--accent-cyan);
+  color: var(--accent);
 }
 
 .navLinks {
   display: flex;
   gap: 2.5rem;
-  justify-content: center;
 }
 
 .navLink {
   font-size: 0.95rem;
   font-weight: 500;
   color: #e2e8f0;
-  transition: all 0.3s ease;
   position: relative;
-}
-
-.navLink:hover {
-  color: var(--foreground);
+  padding: 0.5rem 0;
+  transition: color var(--duration-hover) ease;
 }
 
 .navLink::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: 2px;
   left: 0;
-  width: 0%;
-  height: 2px;
-  background-color: var(--primary-blue);
-  transition: width 0.3s ease;
-  border-radius: 2px;
-}
-
-.navLink:hover::after {
   width: 100%;
-  box-shadow: 0 0 8px var(--primary-blue);
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-hover) var(--ease-out);
 }
 
-/* ---- Hamburger Button ---- */
+.navLink[aria-current="page"] {
+  color: var(--foreground);
+}
+
+.navLink[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .navLink:hover {
+    color: var(--foreground);
+  }
+
+  .navLink:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ---- Hamburger: 44px hit area around a 28px icon ---- */
 .hamburger {
   display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 28px;
-  height: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -8px;
   background: transparent;
   border: none;
+  border-radius: 12px;
   cursor: pointer;
-  padding: 0;
-  z-index: 1001;
+  color: #e2e8f0;
 }
 
-.hamburger span {
+.hamburgerBox {
+  position: relative;
   display: block;
+  width: 26px;
+  height: 18px;
+}
+
+.hamburgerBox span {
+  position: absolute;
+  left: 0;
   width: 100%;
   height: 2px;
-  background: #e2e8f0;
   border-radius: 2px;
-  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-  transform-origin: center;
+  background: currentColor;
+  transition:
+    transform var(--duration-ui) var(--ease-out),
+    opacity var(--duration-ui) var(--ease-out);
 }
 
-/* Animate to X when open */
-.hamburgerOpen span:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
-  background: var(--accent-cyan);
+.hamburgerBox span:nth-child(1) { top: 0; }
+.hamburgerBox span:nth-child(2) { top: 8px; }
+.hamburgerBox span:nth-child(3) { top: 16px; }
+
+.hamburger[data-open] {
+  color: var(--accent);
 }
-.hamburgerOpen span:nth-child(2) {
+
+.hamburger[data-open] .hamburgerBox span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger[data-open] .hamburgerBox span:nth-child(2) {
   opacity: 0;
-  transform: scaleX(0);
-}
-.hamburgerOpen span:nth-child(3) {
-  transform: translateY(-9px) rotate(-45deg);
-  background: var(--accent-cyan);
+  transform: scaleX(0.4);
 }
 
-/* ---- Mobile Dropdown Menu ---- */
+.hamburger[data-open] .hamburgerBox span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* ---- Mobile menu: revealed with clip-path, no layout animation ---- */
 .mobileMenu {
   display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   flex-direction: column;
-  gap: 0;
+  padding-bottom: 0.5rem;
   background: rgba(4, 8, 20, 0.97);
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   border-top: 1px solid rgba(56, 189, 248, 0.15);
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.4s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease;
+  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.45);
+  clip-path: inset(0 0 100% 0);
   opacity: 0;
+  visibility: hidden;
+  transition:
+    clip-path var(--duration-ui) var(--ease-out),
+    opacity var(--duration-ui) var(--ease-out),
+    visibility 0s linear var(--duration-ui);
 }
 
-.mobileMenuOpen {
-  max-height: 400px;
+.mobileMenu[data-open] {
+  clip-path: inset(0 0 0 0);
   opacity: 1;
+  visibility: visible;
+  transition:
+    clip-path var(--duration-ui) var(--ease-out),
+    opacity var(--duration-ui) var(--ease-out),
+    visibility 0s;
 }
 
 .mobileLink {
-  padding: 1rem 2rem;
+  display: block;
+  padding: 1rem max(1.5rem, env(safe-area-inset-left, 0px));
   font-size: 1.1rem;
   font-weight: 600;
   color: #e2e8f0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.2s ease;
-  display: block;
+  transition: background-color var(--duration-press) ease, color var(--duration-press) ease;
 }
 
-.mobileLink:hover {
+.mobileLink:active {
   background: rgba(56, 189, 248, 0.08);
-  color: var(--accent-cyan);
-  padding-left: 2.5rem;
 }
 
-/* ---- Responsive ---- */
+.mobileLink[aria-current="page"] {
+  color: var(--accent);
+}
+
 @media (max-width: 768px) {
   .navLinks {
     display: none;
   }
 
-  .hamburger {
+  .hamburger,
+  .mobileMenu {
     display: flex;
   }
 
-  .mobileMenu {
-    display: flex;
+  .container {
+    height: 64px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobileMenu,
+  .mobileMenu[data-open] {
+    clip-path: none;
   }
 }

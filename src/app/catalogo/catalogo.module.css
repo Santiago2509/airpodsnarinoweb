@@ -1,110 +1,135 @@
 .catalogoContainer {
-  min-height: 100vh;
-  padding: 8rem 2rem 4rem;
+  min-height: 100svh;
+  padding: 8rem 1.5rem 5rem;
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 4rem;
-  animation: fadeInDown 0.8s ease-out;
+  margin-bottom: 3.5rem;
+  animation: headerIn 600ms var(--ease-out) both;
 }
 
 .title {
-  font-size: 3.5rem;
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
   font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   color: #fff;
   margin-bottom: 1rem;
 }
 
 .titleAccent {
-  color: var(--accent-cyan);
-  text-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+  color: var(--accent);
+  text-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
 }
 
 .subtitle {
-  color: #cbd5e1;
-  font-size: 1.2rem;
-  max-width: 600px;
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  max-width: 50ch;
   margin: 0 auto;
 }
 
+/* ---------- Grid ---------- */
+
 .grid {
+  list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: 2rem;
 }
 
+/*
+ * Entrance: a short stagger (40ms steps, capped at ~240ms).
+ * fill-mode "backwards" only applies the start state before the animation,
+ * so it never blocks the hover/press transforms afterwards.
+ */
 .card {
-  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 23, 42, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.5rem;
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  animation: fadeInUp 0.8s ease-out forwards;
-  opacity: 0;
-  transform: translateY(20px);
+  animation: cardIn 500ms var(--ease-out) backwards;
+  transition:
+    border-color var(--duration-hover) ease,
+    box-shadow var(--duration-hover) ease;
 }
 
-.card:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(34, 211, 238, 0.1);
-  border-color: rgba(34, 211, 238, 0.3);
+.cardButton {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  user-select: text;
+  -webkit-user-select: text;
+  transition: transform var(--duration-press) var(--ease-out);
+}
+
+.cardButton:active {
+  transform: scale(0.98);
+}
+
+.cardButton:focus-visible {
+  outline-offset: -3px;
+  border-radius: 1.5rem 1.5rem 0 0;
 }
 
 .imageContainer {
+  display: block;
   position: relative;
-  height: 250px;
+  aspect-ratio: 4 / 3;
   width: 100%;
   overflow: hidden;
+  background: radial-gradient(circle at 50% 45%, rgba(56, 189, 248, 0.08), transparent 70%);
 }
 
+/* contain: AirPods are never cropped */
 .productImage {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
+  object-fit: contain;
+  padding: 1.25rem;
+  transition: transform 400ms var(--ease-out);
 }
 
-.card:hover .productImage {
-  transform: scale(1.1);
-}
-
-.stockBadge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(4px);
-  color: #38bdf8;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-}
-
-.cardContent {
-  padding: 1.5rem;
+.cardText {
+  padding: 1.5rem 1.5rem 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .productName {
-  font-size: 1.5rem;
+  display: block;
+  font-size: 1.4rem;
   font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
   color: #fff;
+  overflow-wrap: anywhere;
 }
 
 .productDescription {
-  color: #cbd5e1;
+  color: var(--text-muted);
   font-size: 0.95rem;
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -117,13 +142,14 @@
 }
 
 .price {
-  font-size: 2rem;
+  font-size: 1.9rem;
   font-weight: 800;
+  letter-spacing: -0.02em;
   color: #fff;
 }
 
 .currency {
-  color: #cbd5e1;
+  color: var(--text-muted);
   font-weight: 600;
 }
 
@@ -132,98 +158,103 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  width: 100%;
-  padding: 1rem;
+  min-height: 52px;
+  margin: 0.75rem 1.5rem 1.5rem;
+  padding: 0.9rem 1rem;
   border-radius: 1rem;
-  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  background-color: #1fa855;
+  background-image: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
   color: white;
-  border: none;
   font-weight: 700;
   font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 0.5rem;
+  user-select: none;
+  -webkit-user-select: none;
+  transition:
+    transform var(--duration-press) var(--ease-out),
+    box-shadow var(--duration-hover) ease;
 }
 
-.whatsappButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    border-color: rgba(56, 189, 248, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.08);
+  }
+
+  .card:hover .productImage {
+    transform: scale(1.04);
+  }
+
+  .whatsappButton:hover {
+    box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+  }
+}
+
+/* ---------- Loading and empty ---------- */
+
+.skeletonCard {
+  height: 470px;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.4));
 }
 
 .emptyState {
-  text-align: center;
-  color: #cbd5e1;
-  font-size: 1.2rem;
-  padding: 4rem;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Modal Styles */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
-  z-index: 1000;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  padding: 2rem;
-  animation: fadeIn 0.3s ease-out;
+  gap: 1.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  padding: 4rem 1rem;
 }
+
+.emptyStateLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(37, 211, 102, 0.5);
+  color: #4ade80;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* ---------- Modal ---------- */
 
 .modalContent {
-  background: rgba(15, 23, 42, 0.95);
+  max-width: 1000px;
+  background: rgba(15, 23, 42, 0.97);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
-  max-width: 1000px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-  animation: fadeInUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
 }
 
 .closeModal {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  width: 44px;
+  height: 44px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
   cursor: pointer;
-  z-index: 10;
-  transition: all 0.2s ease;
-}
-
-.closeModal:hover {
-  background: rgba(239, 68, 68, 0.8);
-  transform: scale(1.1);
+  transition:
+    transform var(--duration-press) var(--ease-out),
+    background-color var(--duration-hover) ease;
 }
 
 .modalGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
 }
 
 .modalGallery {
@@ -232,6 +263,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-width: 0;
 }
 
 .modalMainImageContainer {
@@ -243,51 +275,71 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
+/* Each new photo materializes: opacity + a light blur bridge the swap */
 .modalMainImage {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  transition:
+    opacity 200ms ease,
+    filter 200ms ease;
+
+  @starting-style {
+    opacity: 0;
+    filter: blur(2px);
+  }
 }
 
-.galleryNavLeft, .galleryNavRight {
+.galleryNav {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  translate: 0 -50%;
+  width: 44px;
+  height: 44px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
   cursor: pointer;
-  backdrop-filter: blur(4px);
-  transition: all 0.2s;
+  transition:
+    transform var(--duration-press) var(--ease-out),
+    background-color var(--duration-hover) ease;
+}
+
+.galleryNav:active {
+  transform: scale(0.94);
 }
 
 .galleryNavLeft { left: 10px; }
 .galleryNavRight { right: 10px; }
-.galleryNavLeft:hover, .galleryNavRight:hover { background: rgba(34, 211, 238, 0.8); }
 
 .modalThumbnails {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   overflow-x: auto;
-  padding-bottom: 0.5rem;
+  padding: 3px 3px 0.5rem;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
 }
 
 .thumbnail {
-  width: 80px;
-  height: 80px;
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  padding: 0;
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
   border: 2px solid transparent;
-  opacity: 0.6;
-  transition: all 0.2s;
-  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.03);
+  opacity: 0.55;
+  scroll-snap-align: start;
+  transition:
+    opacity var(--duration-hover) ease,
+    border-color var(--duration-hover) ease;
 }
 
 .thumbnail img {
@@ -296,98 +348,154 @@
   object-fit: cover;
 }
 
-.thumbnailActive {
-  border-color: var(--accent-cyan);
+.thumbnail[data-active] {
+  border-color: var(--accent);
   opacity: 1;
 }
 
 .modalDetails {
-  padding: 3rem 3rem 3rem 1rem;
+  padding: 3.5rem 3rem 2.5rem 1.5rem;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .modalTitle {
-  font-size: 2.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: white;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-right: 2.5rem;
+  overflow-wrap: anywhere;
 }
 
 .modalPriceContainer {
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
-  margin-bottom: 2rem;
 }
 
 .modalPrice {
-  font-size: 2.5rem;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
   font-weight: 800;
-  color: var(--accent-cyan);
+  letter-spacing: -0.02em;
+  color: var(--accent);
 }
 
 .modalDivider {
   height: 1px;
   background: rgba(255, 255, 255, 0.1);
-  margin: 1.5rem 0;
+  margin: 1.75rem 0;
+}
+
+.modalDescription {
+  margin-bottom: 2rem;
 }
 
 .modalDescription h3 {
   color: white;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
 }
 
 .modalDescription p {
-  color: #94a3b8;
+  color: #b4c0d3;
   line-height: 1.7;
+  white-space: pre-line;
+  max-width: 60ch;
 }
-
-.infoRow {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.infoLabel { color: #94a3b8; }
-.infoValue { color: white; font-weight: 600; }
 
 .modalWhatsappButton {
   margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.75rem;
   width: 100%;
-  padding: 1.2rem;
+  min-height: 56px;
+  padding: 1rem;
   border-radius: 1rem;
-  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  background-color: #1fa855;
+  background-image: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
   color: white;
-  border: none;
   font-weight: 700;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  font-size: 1.15rem;
   box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
+  transition:
+    transform var(--duration-press) var(--ease-out),
+    box-shadow var(--duration-hover) ease;
 }
 
-.modalWhatsappButton:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 30px rgba(37, 211, 102, 0.4);
+@media (hover: hover) and (pointer: fine) {
+  .closeModal:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .galleryNav:hover {
+    background: rgba(56, 189, 248, 0.85);
+  }
+
+  .thumbnail:hover {
+    opacity: 0.9;
+  }
+
+  .modalWhatsappButton:hover {
+    box-shadow: 0 15px 30px rgba(37, 211, 102, 0.4);
+  }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes headerIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
 }
 
 @media (max-width: 768px) {
   .modalGrid {
     grid-template-columns: 1fr;
-    gap: 0;
   }
+
+  .modalGallery {
+    padding: 1.25rem 1.25rem 0;
+    background: transparent;
+  }
+
   .modalDetails {
-    padding: 2rem;
+    padding: 1.5rem 1.25rem 1.5rem;
+  }
+
+  .modalTitle {
+    padding-right: 0;
+  }
+
+  .closeModal {
+    top: 0.75rem;
+    right: 0.75rem;
+    background: rgba(0, 0, 0, 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes headerIn {
+    from { opacity: 0; }
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; }
+  }
+
+  .productImage,
+  .modalMainImage {
+    transition: none;
   }
 }

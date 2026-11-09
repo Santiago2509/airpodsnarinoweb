@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { useProductStore } from "@/store/useProductStore";
 import styles from "./finanzas.module.css";
+import { formatPrice } from "@/lib/site";
 
 export default function AdminFinanzas() {
   const { transactions } = useProductStore();
@@ -16,8 +17,8 @@ export default function AdminFinanzas() {
     const years = new Set<number>();
     const currentYear = new Date().getFullYear();
     
-    // Añadir desde el año actual hasta 2030 (o al revés)
-    for (let y = 2024; y <= 2030; y++) {
+    // Desde 2024 hasta el año actual, más los años que tengan ventas
+    for (let y = 2024; y <= currentYear; y++) {
       years.add(y);
     }
     
@@ -60,9 +61,7 @@ export default function AdminFinanzas() {
     };
   }, [filteredTransactions]);
 
-  const formatCurrency = (value: number) => {
-    return `$${value.toLocaleString("es-CO")}`;
-  };
+  const formatCurrency = formatPrice;
 
   const months = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -75,7 +74,8 @@ export default function AdminFinanzas() {
         <h1>Auditoría y Ganancias</h1>
         
         <div className={styles.controls}>
-          <select 
+          <select
+            aria-label="Año"
             value={year} 
             onChange={e => setYear(e.target.value)}
             className={styles.select}
@@ -86,7 +86,8 @@ export default function AdminFinanzas() {
             ))}
           </select>
 
-          <select 
+          <select
+            aria-label="Mes"
             value={month} 
             onChange={e => setMonth(e.target.value)}
             className={styles.select}
@@ -102,15 +103,15 @@ export default function AdminFinanzas() {
       <div className={styles.summaryCards}>
         <div className={styles.card}>
           <span className={styles.cardTitle}>Ingresos Brutos (Ventas)</span>
-          <span className={styles.cardValue}>{formatCurrency(totalRevenue)}</span>
+          <span className={`${styles.cardValue} tabular`}>{formatCurrency(totalRevenue)}</span>
         </div>
         <div className={styles.card}>
           <span className={styles.cardTitle}>Costo de Mercancía</span>
-          <span className={styles.cardValue}>{formatCurrency(totalCost)}</span>
+          <span className={`${styles.cardValue} tabular`}>{formatCurrency(totalCost)}</span>
         </div>
         <div className={styles.card}>
           <span className={styles.cardTitle}>Ganancia Neta (Profit)</span>
-          <span className={`${styles.cardValue} ${totalProfit >= 0 ? styles.profitPositive : styles.profitNegative}`}>
+          <span className={`${styles.cardValue} tabular ${totalProfit >= 0 ? styles.profitPositive : styles.profitNegative}`}>
             {formatCurrency(totalProfit)}
           </span>
         </div>
@@ -140,7 +141,7 @@ export default function AdminFinanzas() {
                 const ganancia = ingreso - costo;
                 
                 return (
-                  <tr key={t.id}>
+                  <tr key={t.id} className="tabular">
                     <td>{new Date(t.date).toLocaleDateString('es-CO')}</td>
                     <td>{t.productName}</td>
                     <td>{t.quantity}</td>
