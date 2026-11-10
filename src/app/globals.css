@@ -119,11 +119,12 @@ body {
   flex-direction: column;
   font-family: var(--font-montserrat);
   color: var(--foreground);
-  background-color: var(--background);
+  /* No background here: the page colour lives on <html> and the animated
+     background layer, which a body background would paint over */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
-  transition: background-color 300ms ease, color 300ms ease;
+  transition: color 300ms ease;
 }
 
 a {
