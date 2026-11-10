@@ -12,8 +12,8 @@ const NAME_TOP = "AIRPODS".split("");
 const NAME_BOTTOM = "NARIÑO".split("");
 
 /**
- * Brand intro: the animated emblem (rebuilt from the intro film) centred,
- * then the company name builds letter by letter beneath it.
+ * Brand intro: the animated logo (the case opens and the mountain climbs out),
+ * then the company name builds letter by letter on top of it, as in the brand film.
  * - Entrance: CSS only, so it plays smoothly while the page is still loading.
  * - Pointer: the emblem tilts toward the mouse on a spring (mouse only).
  * - Scroll: the whole lockup recedes as the next section arrives.
@@ -67,23 +67,24 @@ export default function Hero() {
           style={reduce ? { rotateX: 0, rotateY: 0 } : { rotateX, rotateY, transformPerspective: 900 }}
         >
           <BrandEmblem className={styles.emblem} />
+
+          {/* The name sits on the logo, under the mountain, like the original brand frame */}
+          <h1 className={styles.name} aria-label="Airpods Nariño">
+            <span className={styles.nameTop} aria-hidden="true">
+              {letters(NAME_TOP, 0)}
+            </span>
+            <span className={styles.flare} aria-hidden="true" />
+            <span className={styles.nameBottom} aria-hidden="true">
+              {letters(NAME_BOTTOM, NAME_TOP.length)}
+            </span>
+          </h1>
         </motion.div>
 
-        <h1 className={styles.name} aria-label="Airpods Nariño">
-          <span className={styles.nameTop} aria-hidden="true">
-            {letters(NAME_TOP, 0)}
-          </span>
-          <span className={styles.flare} aria-hidden="true" />
-          <span className={styles.nameBottom} aria-hidden="true">
-            {letters(NAME_BOTTOM, NAME_TOP.length)}
-          </span>
-        </h1>
-
-        <p className={`${styles.tagline} ${styles.enter}`} style={{ "--d": "1500ms" } as React.CSSProperties}>
+        <p className={`${styles.tagline} ${styles.enter}`} style={{ "--d": "700ms" } as React.CSSProperties}>
           Accesorios Apple con garantía directa en Pasto y todo Nariño
         </p>
 
-        <div className={`${styles.actions} ${styles.enter}`} style={{ "--d": "1600ms" } as React.CSSProperties}>
+        <div className={`${styles.actions} ${styles.enter}`} style={{ "--d": "800ms" } as React.CSSProperties}>
           <Link href="/catalogo" className="btn btnPrimary">
             Ver catálogo <ArrowRight size={18} aria-hidden="true" />
           </Link>
@@ -92,7 +93,7 @@ export default function Hero() {
           </Link>
         </div>
 
-        <ul className={`${styles.trust} ${styles.enter}`} style={{ "--d": "1750ms" } as React.CSSProperties}>
+        <ul className={`${styles.trust} ${styles.enter}`} style={{ "--d": "950ms" } as React.CSSProperties}>
           <li>
             <ShieldCheck size={16} aria-hidden="true" /> Garantía directa
           </li>
