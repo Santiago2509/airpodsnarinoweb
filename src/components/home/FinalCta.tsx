@@ -26,7 +26,7 @@ export default function FinalCta() {
 
           <p className={styles.kicker}>Airpods Nariño</p>
           <h2 id="cta-title" className={styles.title}>
-            ¿Listo para escuchar la diferencia?
+            ¿Listo para tu próximo accesorio Apple?
           </h2>
           <p className={styles.text}>
             Escríbenos y te ayudamos a elegir. Respondemos rápido y enviamos a todo Nariño.

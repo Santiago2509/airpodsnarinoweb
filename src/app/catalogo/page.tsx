@@ -113,7 +113,7 @@ export default function CatalogoPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease, delay: 0.05 }}
         >
-          Encuentra tu <span className="gradientText">sonido.</span>
+          Encuentra tu <span className="gradientText">accesorio.</span>
         </motion.h1>
         <motion.p
           className={styles.subtitle}

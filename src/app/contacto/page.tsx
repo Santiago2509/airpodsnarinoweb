@@ -35,7 +35,7 @@ export default function Contacto() {
       <PageHero
         eyebrow="Contacto"
         title="Hablemos de tu"
-        accent="próximo sonido."
+        accent="próxima compra."
         subtitle="Escríbenos directamente o síguenos en redes. Respondemos rápido y te asesoramos sin compromiso."
       />
 

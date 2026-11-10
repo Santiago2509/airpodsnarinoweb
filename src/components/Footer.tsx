@@ -17,7 +17,7 @@ export default function Footer() {
               </p>
               <p className={styles.brandDescription}>
                 La tienda líder en Pasto y todo el departamento de Nariño. Especialistas en audífonos y
-                accesorios Apple con calidad premium y sonido excepcional.
+                accesorios Apple con calidad premium y garantía directa.
               </p>
               <div className={styles.badge}>
                 <ShieldCheck size={18} className={styles.badgeIcon} aria-hidden="true" />

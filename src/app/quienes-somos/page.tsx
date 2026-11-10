@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { ShieldCheck, Zap, Headphones, MapPin, ArrowRight } from "lucide-react";
+import { ShieldCheck, Zap, Award, MapPin, ArrowRight } from "lucide-react";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import styles from "./quienes-somos.module.css";
@@ -8,14 +8,14 @@ import styles from "./quienes-somos.module.css";
 export const metadata: Metadata = {
   title: "Quiénes Somos | Airpods Nariño - Tu tienda Apple de confianza",
   description:
-    "Conoce Airpods Nariño, la tienda líder de accesorios y audífonos Apple en Nariño, Colombia. Calidad, garantía directa y la mejor experiencia de sonido.",
+    "Conoce Airpods Nariño, la tienda líder de accesorios y audífonos Apple en Nariño, Colombia. Calidad, garantía directa y atención cercana.",
   keywords: "Airpods Nariño, Quiénes somos, tienda Apple Pasto, accesorios Apple Colombia, garantía Apple Nariño",
 };
 
 const VALUES = [
   { icon: ShieldCheck, title: "Garantía real", text: "Respaldo directo para proteger tu inversión. Si algo sale mal, estamos aquí para solucionarlo." },
   { icon: Zap, title: "Atención rápida", text: "Entregas ágiles y un servicio que prioriza tu tiempo y tus necesidades." },
-  { icon: Headphones, title: "Calidad premium", text: "Trabajamos con los mejores estándares para que tu experiencia auditiva sea inigualable." },
+  { icon: Award, title: "Calidad premium", text: "Seleccionamos cada accesorio por su calidad, para que funcione como debe todos los días." },
   { icon: MapPin, title: "Talento local", text: "Somos una empresa 100% nariñense, comprometida con el desarrollo de nuestra región." },
 ];
 
@@ -26,7 +26,7 @@ export default function QuienesSomos() {
         eyebrow="Nosotros"
         title="Hechos en"
         accent="Nariño."
-        subtitle="Tu conexión directa con el sonido de calidad superior, desde Pasto para todo el sur de Colombia."
+        subtitle="Tu tienda de accesorios Apple de confianza, desde Pasto para todo el sur de Colombia."
       />
 
       <section className="container">
@@ -37,10 +37,10 @@ export default function QuienesSomos() {
           <div className={styles.storyText}>
             <p className={styles.lead}>
               En <strong>Airpods Nariño</strong> nacimos con una misión clara: acercar la tecnología de
-              vanguardia y el sonido premium a todos los habitantes de Nariño y Colombia.
+              vanguardia y los accesorios Apple a todos los habitantes de Nariño y Colombia.
             </p>
             <p>
-              Sabemos que un buen par de audífonos no solo sirve para escuchar música: transforma tu forma de
+              Sabemos que un buen accesorio no es un detalle: cambia tu forma de
               comunicarte, trabajar y vivir cada día. Comenzamos como una pequeña iniciativa en Pasto, buscando
               ofrecer alternativas seguras, confiables y con respaldo real en un mercado lleno de
               incertidumbres.

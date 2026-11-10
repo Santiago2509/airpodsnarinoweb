@@ -33,8 +33,8 @@ const STEPS = [
   {
     icon: Headphones,
     kicker: "Calidad premium",
-    title: "Sonido que se siente.",
-    text: "Solo ofrecemos audífonos con calidad de sonido excepcional y durabilidad comprobada.",
+    title: "Calidad que se nota.",
+    text: "AirPods, cargadores, cables y accesorios seleccionados por su calidad y durabilidad.",
   },
 ];
 
