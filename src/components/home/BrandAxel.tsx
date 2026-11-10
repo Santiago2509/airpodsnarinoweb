@@ -71,13 +71,14 @@ export default function BrandAxel() {
 
         <div className={`container ${styles.layout}`}>
           <motion.div className={styles.copy} style={reduce ? { opacity: 1, y: 0 } : { opacity: copyOpacity, y: copyY }}>
-            <p className="eyebrow">La cara de la marca</p>
+            <p className="eyebrow">Hola, mucho gusto</p>
             <h2 id="axel-title" className={styles.title}>
-              Conoce a <span className="gradientText">Axel.</span>
+              Soy <span className="gradientText">Axel.</span>
             </h2>
             <p className={styles.text}>
-              Axel es la imagen de Airpods Nariño. Una tienda joven y del sur, que lleva lo mejor del mundo
-              Apple a Pasto y a todo el departamento, con garantía directa y atención cercana.
+              Soy la imagen de Airpods Nariño. Somos una tienda joven y del sur que lleva lo mejor del mundo
+              Apple a Pasto y a todo el departamento, con garantía directa y atención cercana. Escríbenos y
+              te ayudo a encontrar lo que buscas.
             </p>
             <dl className={styles.stats}>
               <div className={styles.stat}>

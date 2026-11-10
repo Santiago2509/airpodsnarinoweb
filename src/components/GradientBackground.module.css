@@ -1,6 +1,8 @@
 /*
- * Ambient aurora + a faint grid. The orbs drift very slowly and only
- * `transform` animates, so the GPU just moves pre-painted layers.
+ * Discreet, constant motion (it never competes with the content):
+ *   - two coloured glows rotate around the page once every 70s
+ *   - sound-wave rings expand from the centre, one every 4s, almost transparent
+ * Only `transform` and `opacity` animate, on pre-painted layers.
  */
 .root {
   position: fixed;
@@ -10,6 +12,23 @@
   pointer-events: none;
   background: var(--background);
   transition: background-color 300ms ease;
+}
+
+.spin {
+  position: absolute;
+  inset: -50%;
+  background:
+    radial-gradient(circle at 30% 65%, var(--aurora-1), transparent 32%),
+    radial-gradient(circle at 72% 32%, var(--aurora-3), transparent 30%),
+    radial-gradient(circle at 55% 85%, var(--aurora-2), transparent 28%);
+  animation: spin 70s linear infinite;
+  will-change: transform;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .grid {
@@ -23,53 +42,56 @@
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
 }
 
-.orb {
+.rings {
   position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.rings span {
+  grid-area: 1 / 1;
+  width: 70vmin;
+  height: 70vmin;
   border-radius: 50%;
-  will-change: transform;
+  border: 1px solid var(--ring-color);
+  opacity: 0;
+  animation: ring 12s var(--ease-out) infinite;
+  will-change: transform, opacity;
 }
 
-.orb1 {
-  width: 70vmax;
-  height: 70vmax;
-  background: radial-gradient(circle, var(--aurora-1) 0%, transparent 65%);
-  top: -35%;
-  left: -20%;
-  animation: drift1 40s ease-in-out infinite alternate;
+.rings span:nth-child(2) { animation-delay: 4s; }
+.rings span:nth-child(3) { animation-delay: 8s; }
+
+@keyframes ring {
+  from {
+    transform: scale(0.35);
+    opacity: 1;
+  }
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
 }
 
-.orb2 {
-  width: 60vmax;
-  height: 60vmax;
-  background: radial-gradient(circle, var(--aurora-2) 0%, transparent 65%);
-  top: -10%;
-  right: -25%;
-  animation: drift2 48s ease-in-out infinite alternate;
+.root {
+  --ring-color: rgba(10, 124, 255, 0.16);
 }
 
-.orb3 {
-  width: 55vmax;
-  height: 55vmax;
-  background: radial-gradient(circle, var(--aurora-3) 0%, transparent 65%);
-  bottom: -30%;
-  left: 20%;
-  animation: drift3 44s ease-in-out infinite alternate;
-}
-
-@keyframes drift1 {
-  to { transform: translate(8vw, 12vh); }
-}
-
-@keyframes drift2 {
-  to { transform: translate(-10vw, 14vh); }
-}
-
-@keyframes drift3 {
-  to { transform: translate(6vw, -10vh); }
+:global([data-theme="dark"]) .root {
+  --ring-color: rgba(125, 211, 252, 0.18);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orb {
+  .spin,
+  .rings span {
     animation: none;
   }
+
+  .rings span {
+    opacity: 0.5;
+  }
+
+  .rings span:nth-child(2) { transform: scale(1.5); opacity: 0.3; }
+  .rings span:nth-child(3) { transform: scale(2.1); opacity: 0.15; }
 }
