@@ -1,23 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "motion/react";
-import { Headphones, BatteryCharging, Cable, Shield, Watch, Sparkles, ArrowUpRight } from "lucide-react";
+import { useRef } from "react";
+import { motion, useInView } from "motion/react";
+import { ArrowUpRight } from "lucide-react";
+import {
+  AirPodsIllustration,
+  BagIllustration,
+  CableIllustration,
+  CaseIllustration,
+  ChargerIllustration,
+  WatchIllustration,
+} from "./CategoryIllustrations";
 import styles from "./Categories.module.css";
 
 const ease = [0.23, 1, 0.32, 1] as const;
 
 // Each tile opens the catalog with a search already applied
 const CATEGORIES = [
-  { icon: Headphones, title: "AirPods", text: "Pro, 4, Max y más", q: "airpods", size: "large" },
-  { icon: BatteryCharging, title: "Cargadores", text: "MagSafe, USB-C, carga rápida", q: "cargador", size: "" },
-  { icon: Cable, title: "Cables", text: "Lightning y USB-C", q: "cable", size: "" },
-  { icon: Shield, title: "Estuches", text: "Protección con estilo", q: "estuche", size: "" },
-  { icon: Watch, title: "Apple Watch", text: "Correas y accesorios", q: "watch", size: "" },
-  { icon: Sparkles, title: "Todo el catálogo", text: "Mira todo lo disponible hoy", q: "", size: "wide" },
+  { art: AirPodsIllustration, title: "AirPods", text: "Pro, 4, Max y más", q: "airpods", size: "large" },
+  { art: ChargerIllustration, title: "Cargadores", text: "MagSafe, USB-C, carga rápida", q: "cargador", size: "" },
+  { art: CableIllustration, title: "Cables", text: "Lightning y USB-C", q: "cable", size: "" },
+  { art: CaseIllustration, title: "Estuches", text: "Protección con estilo", q: "estuche", size: "" },
+  { art: WatchIllustration, title: "Apple Watch", text: "Correas y accesorios", q: "watch", size: "" },
+  { art: BagIllustration, title: "Todo el catálogo", text: "Mira todo lo disponible hoy", q: "", size: "wide" },
 ];
 
 export default function Categories() {
+  const gridRef = useRef<HTMLUListElement>(null);
+  // Plays the illustrations' "first look" (the AirPods case opens) once
+  const inView = useInView(gridRef, { once: true, margin: "-120px" });
+
   return (
     <section className={styles.section} aria-labelledby="categories-title">
       <div className="container">
@@ -30,13 +43,15 @@ export default function Categories() {
         </div>
 
         <motion.ul
+          ref={gridRef}
+          data-inview={inView ? "" : undefined}
           className={styles.grid}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05 } } }}
         >
-          {CATEGORIES.map(({ icon: Icon, title, text, q, size }) => (
+          {CATEGORIES.map(({ art: Art, title, text, q, size }) => (
             <motion.li
               key={title}
               className={`${styles.cell} ${size === "large" ? styles.large : ""} ${size === "wide" ? styles.wide : ""}`}
@@ -46,8 +61,8 @@ export default function Categories() {
               }}
             >
               <Link href={q ? `/catalogo?q=${q}` : "/catalogo"} className={styles.tile}>
-                <span className={styles.icon}>
-                  <Icon size={size === "large" ? 34 : 24} aria-hidden="true" />
+                <span className={styles.art}>
+                  <Art />
                 </span>
                 <span className={styles.tileText}>
                   <span className={styles.tileTitle}>{title}</span>
