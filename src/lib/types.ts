@@ -8,6 +8,7 @@ export interface Product {
   images?: string[];      // Hasta 6 imágenes (URLs de Supabase Storage)
   stock: number;
   status: "active" | "inactive";
+  category?: string | null; // see src/lib/categories.ts
   createdAt: string;
   wholesaleMinQuantity?: number;
   wholesalePrice?: number;

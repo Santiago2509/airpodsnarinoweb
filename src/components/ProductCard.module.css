@@ -177,3 +177,22 @@
     transform: none;
   }
 }
+
+.soldOut {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.card[data-sold-out] .image {
+  filter: grayscale(0.85);
+  opacity: 0.6;
+}

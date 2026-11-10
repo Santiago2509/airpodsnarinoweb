@@ -1,0 +1,109 @@
+/* Admin is always dark: series color validated against the dark surface (#3987e5) */
+.wrap {
+  --series-1: #3987e5;
+  --text-secondary: #94a3b8;
+  --grid: rgba(255, 255, 255, 0.06);
+  --axis: rgba(255, 255, 255, 0.28);
+  position: relative;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.grid {
+  stroke: var(--grid);
+  stroke-width: 1;
+}
+
+.zero {
+  stroke: var(--axis);
+  stroke-width: 1;
+}
+
+.tick,
+.month {
+  fill: var(--text-secondary);
+  font-size: 11px;
+  font-family: var(--font-montserrat);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar {
+  fill: var(--series-1);
+  transition: opacity 150ms ease;
+}
+
+.bar[data-dim] {
+  opacity: 0.35;
+}
+
+.hit {
+  fill: transparent;
+  cursor: default;
+  outline: none;
+}
+
+.hit:focus-visible {
+  fill: rgba(255, 255, 255, 0.05);
+}
+
+.tooltip {
+  position: absolute;
+  top: 0;
+  translate: -50% 0;
+  min-width: 190px;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.6rem;
+  background: #0b1220;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 2;
+  font-size: 0.82rem;
+}
+
+.tipTitle {
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 0.4rem;
+}
+
+.tooltip dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.tooltip dd {
+  color: #e2e8f0;
+}
+
+.tipTotal {
+  margin-top: 0.25rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+}
+
+.tipTotal dd {
+  color: #f8fafc;
+}
+
+.empty {
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--text-subtle);
+}
+
+@media (max-width: 640px) {
+  .tick,
+  .month {
+    font-size: 16px;
+  }
+}

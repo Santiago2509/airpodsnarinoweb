@@ -12,6 +12,7 @@ interface ProductCardProps {
   href?: string;
   onSelect?: () => void;
   eager?: boolean;
+  soldOut?: boolean;
   children?: React.ReactNode;
 }
 
@@ -27,7 +28,7 @@ function trackPointer(e: React.PointerEvent<HTMLElement>) {
   e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
 }
 
-export default function ProductCard({ product, href, onSelect, eager, children }: ProductCardProps) {
+export default function ProductCard({ product, href, onSelect, eager, soldOut, children }: ProductCardProps) {
   const body = (
     <>
       <span className={styles.media}>
@@ -43,6 +44,7 @@ export default function ProductCard({ product, href, onSelect, eager, children }
         <span className={styles.open} aria-hidden="true">
           <ArrowUpRight size={18} />
         </span>
+        {soldOut && <span className={styles.soldOut}>Agotado</span>}
       </span>
       <span className={styles.info}>
         <span className={styles.name}>{product.name}</span>
@@ -56,7 +58,7 @@ export default function ProductCard({ product, href, onSelect, eager, children }
   );
 
   return (
-    <article className={styles.card} onPointerMove={trackPointer}>
+    <article className={styles.card} data-sold-out={soldOut ? "" : undefined} onPointerMove={trackPointer}>
       <span className={styles.spotlight} aria-hidden="true" />
       {href ? (
         <Link href={href} className={styles.hit}>

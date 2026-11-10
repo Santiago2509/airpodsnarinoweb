@@ -1,19 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { useProductStore } from "@/store/useProductStore";
-import { Plus, Edit2, Trash2, ShoppingCart } from "lucide-react";
+import { MIGRATION_HINT, useProductStore } from "@/store/useProductStore";
+import { Plus, Edit2, Trash2, ShoppingCart, Search, AlertTriangle } from "lucide-react";
 import styles from "./productos.module.css";
 import { Product, TransactionType } from "@/lib/types";
 import ImageUploader from "@/components/ImageUploader";
 import Modal from "@/components/Modal";
 import { PLACEHOLDER_IMAGE, formatPrice } from "@/lib/site";
+import { CATEGORIES, categoryLabel, normalize, productCategory } from "@/lib/categories";
+import { deleteProductImage } from "@/lib/supabase";
 
 const STATUS_LABEL: Record<Product["status"], string> = {
   active: "Activo",
-  inactive: "Inactivo",
+  inactive: "Oculto",
 };
+
+const LOW_STOCK = 10;
+
+/** Remove image files from storage; failures are logged, never block the UI */
+async function removeImages(urls: string[]) {
+  await Promise.all(urls.map((url) => deleteProductImage(url)));
+}
 
 const initialFormState = {
   name: "",
@@ -24,6 +33,7 @@ const initialFormState = {
   images: [] as string[],
   stock: 0,
   status: "active" as Product["status"],
+  category: "" as string,
   wholesaleMinQuantity: undefined as number | undefined,
   wholesalePrice: undefined as number | undefined,
 };
@@ -33,7 +43,25 @@ function errorText(error: unknown) {
 }
 
 export default function AdminProductos() {
-  const { products, addProduct, updateProduct, deleteProduct, addTransaction } = useProductStore();
+  const { products, addProduct, updateProduct, deleteProduct, addTransaction, categoriesEnabled } = useProductStore();
+
+  // ---------- Table filters ----------
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | Product["status"]>("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [lowStockOnly, setLowStockOnly] = useState(false);
+
+  const visibleProducts = useMemo(() => {
+    const q = normalize(query.trim());
+    return products.filter((p) => {
+      if (q && !normalize(`${p.name} ${p.description}`).includes(q)) return false;
+      if (statusFilter !== "all" && p.status !== statusFilter) return false;
+      if (categoryFilter !== "all" && productCategory(p) !== categoryFilter) return false;
+      if (lowStockOnly && p.stock >= LOW_STOCK) return false;
+      return true;
+    });
+  }, [products, query, statusFilter, categoryFilter, lowStockOnly]);
+  const lowStockCount = products.filter((p) => p.stock < LOW_STOCK).length;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -41,6 +69,9 @@ export default function AdminProductos() {
   const [uploadFolder, setUploadFolder] = useState("");
   const [formData, setFormData] = useState(initialFormState);
   const [saving, setSaving] = useState(false);
+  // Photos the product had when the form opened, and photos uploaded during this edit
+  const [originalImages, setOriginalImages] = useState<string[]>([]);
+  const [uploadedThisSession, setUploadedThisSession] = useState<string[]>([]);
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [transactionData, setTransactionData] = useState({
@@ -55,32 +86,46 @@ export default function AdminProductos() {
   const openNewProduct = () => {
     setEditingId(null);
     setFormData(initialFormState);
+    setOriginalImages([]);
+    setUploadedThisSession([]);
     setUploadFolder(`new-${crypto.randomUUID()}`);
     setIsModalOpen(true);
   };
 
   const handleEdit = (product: Product) => {
+    const images = product.images?.length ? product.images : product.imageUrl ? [product.imageUrl] : [];
     setEditingId(product.id);
     setUploadFolder(product.id);
+    setOriginalImages(images);
+    setUploadedThisSession([]);
     setFormData({
       name: product.name,
       description: product.description,
       costPrice: product.costPrice || 0,
       price: product.price,
       imageUrl: product.imageUrl,
-      images: product.images?.length ? product.images : product.imageUrl ? [product.imageUrl] : [],
+      images,
       stock: product.stock,
       status: product.status,
+      category: productCategory(product) ?? "",
       wholesaleMinQuantity: product.wholesaleMinQuantity,
       wholesalePrice: product.wholesalePrice,
     });
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const resetForm = () => {
     setIsModalOpen(false);
     setEditingId(null);
     setFormData(initialFormState);
+    setOriginalImages([]);
+    setUploadedThisSession([]);
+  };
+
+  // Cancel: photos uploaded during this edit were never saved, so remove them
+  const closeModal = () => {
+    if (uploadedThisSession.length) removeImages(uploadedThisSession);
+    resetForm();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,14 +135,13 @@ export default function AdminProductos() {
 
     setSaving(true);
     try {
-      if (editingId) {
-        await updateProduct(editingId, dataToSave);
-        toast.success("Producto actualizado");
-      } else {
-        await addProduct(dataToSave);
-        toast.success("Producto guardado");
-      }
-      closeModal();
+      const warning = editingId ? await updateProduct(editingId, dataToSave) : await addProduct(dataToSave);
+      toast.success(editingId ? "Producto actualizado" : "Producto guardado", warning ? { description: warning } : undefined);
+      // Photos removed in the form are deleted from storage once the product is saved
+      const kept = new Set(dataToSave.images);
+      const removed = [...originalImages, ...uploadedThisSession].filter((url) => !kept.has(url));
+      if (removed.length) removeImages(removed);
+      resetForm();
     } catch (error) {
       toast.error("No se pudo guardar el producto", { description: errorText(error) });
     } finally {
@@ -150,6 +194,7 @@ export default function AdminProductos() {
     setSaving(true);
     try {
       await deleteProduct(product.id);
+      removeImages(product.images?.length ? product.images : product.imageUrl ? [product.imageUrl] : []);
       toast.success(`"${product.name}" eliminado`);
       setProductToDelete(null);
     } catch (error) {
@@ -158,6 +203,12 @@ export default function AdminProductos() {
       setSaving(false);
     }
   };
+
+  // Sales and warranties cannot take out more units than there are
+  const exceedsStock =
+    !!selectedProduct &&
+    (transactionData.type === "sale" || transactionData.type === "warranty") &&
+    transactionData.quantity > selectedProduct.stock;
 
   const isWholesaleApplied =
     !!selectedProduct?.wholesaleMinQuantity &&
@@ -174,11 +225,62 @@ export default function AdminProductos() {
         </button>
       </div>
 
+      {!categoriesEnabled && (
+        <p className={styles.notice}>
+          <AlertTriangle size={16} aria-hidden="true" /> Las categorías aún no están activas. {MIGRATION_HINT}
+        </p>
+      )}
+
+      <div className={styles.toolbar}>
+        <label className={styles.search}>
+          <Search size={16} aria-hidden="true" />
+          <span className="srOnly">Buscar productos</span>
+          <input
+            type="search"
+            placeholder="Buscar producto…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </label>
+        <select
+          className={styles.select}
+          aria-label="Filtrar por estado"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
+        >
+          <option value="all">Todos los estados</option>
+          <option value="active">Activos</option>
+          <option value="inactive">Ocultos</option>
+        </select>
+        <select
+          className={styles.select}
+          aria-label="Filtrar por categoría"
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+        >
+          <option value="all">Todas las categorías</option>
+          {CATEGORIES.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.label}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          className={styles.chip}
+          aria-pressed={lowStockOnly}
+          onClick={() => setLowStockOnly((v) => !v)}
+        >
+          Stock bajo <span className="tabular">({lowStockCount})</span>
+        </button>
+      </div>
+
       <div className={styles.tableContainer}>
         <table className={styles.table}>
           <thead>
             <tr>
               <th>Producto</th>
+              <th>Categoría</th>
               <th>Precio</th>
               <th>Stock</th>
               <th>Estado</th>
@@ -186,12 +288,14 @@ export default function AdminProductos() {
             </tr>
           </thead>
           <tbody>
-            {products.length === 0 && (
+            {visibleProducts.length === 0 && (
               <tr>
-                <td colSpan={5} className={styles.emptyRow}>Todavía no hay productos.</td>
+                <td colSpan={6} className={styles.emptyRow}>
+                  {products.length === 0 ? "Todavía no hay productos." : "Ningún producto coincide con los filtros."}
+                </td>
               </tr>
             )}
-            {products.map((product) => (
+            {visibleProducts.map((product) => (
               <tr key={product.id}>
                 <td>
                   <div className={styles.productCell}>
@@ -207,9 +311,13 @@ export default function AdminProductos() {
                     <p className={styles.productName}>{product.name}</p>
                   </div>
                 </td>
+                <td className={styles.muted}>
+                  {categoryLabel(productCategory(product))}
+                  {!product.category && productCategory(product) && <span className={styles.guess}> (auto)</span>}
+                </td>
                 <td className="tabular">{formatPrice(product.price)}</td>
                 <td>
-                  <span className={`${styles.stockBadge} ${product.stock < 10 ? styles.stockLow : styles.stockGood} tabular`}>
+                  <span className={`${styles.stockBadge} ${product.stock === 0 ? styles.stockOut : product.stock < LOW_STOCK ? styles.stockLow : styles.stockGood} tabular`}>
                     {product.stock}
                   </span>
                 </td>
@@ -336,15 +444,39 @@ export default function AdminProductos() {
               onChange={(e) => setFormData({ ...formData, status: e.target.value as Product["status"] })}
             >
               <option value="active">Activo (visible en el catálogo)</option>
-              <option value="inactive">Inactivo (oculto)</option>
+              <option value="inactive">Oculto</option>
             </select>
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="p-category">Categoría</label>
+            <select
+              id="p-category"
+              className={styles.select}
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              disabled={!categoriesEnabled}
+            >
+              <option value="">Sin categoría</option>
+              {CATEGORIES.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+            {!categoriesEnabled && <small className={styles.fieldHint}>{MIGRATION_HINT}</small>}
           </div>
           <div className={styles.formGroup}>
             <span className={styles.fakeLabel}>Imágenes del Producto (máx. 6)</span>
             <ImageUploader
               productId={uploadFolder}
               existingImages={formData.images}
-              onChange={(urls) => setFormData((prev) => ({ ...prev, images: urls, imageUrl: urls[0] || "" }))}
+              onChange={(urls) => {
+                setFormData((prev) => ({ ...prev, images: urls, imageUrl: urls[0] || "" }));
+                setUploadedThisSession((prev) => [
+                  ...prev,
+                  ...urls.filter((u) => !originalImages.includes(u) && !prev.includes(u)),
+                ]);
+              }}
             />
           </div>
 
@@ -437,11 +569,20 @@ export default function AdminProductos() {
                     inputMode="numeric"
                     required
                     min="1"
+                    max={transactionData.type === "return" ? undefined : selectedProduct.stock}
+                    aria-invalid={exceedsStock}
                     value={transactionData.quantity}
                     onChange={(e) => handleQuantityChange(Number(e.target.value))}
                   />
                 </div>
               </div>
+
+              {exceedsStock && (
+                <div className={styles.stockError} role="alert">
+                  <AlertTriangle size={16} aria-hidden="true" />
+                  Solo hay {selectedProduct.stock} unidades en stock.
+                </div>
+              )}
 
               {isWholesaleApplied && (
                 <div className={styles.wholesaleBadge}>Precio mayorista aplicado automáticamente</div>
@@ -488,7 +629,7 @@ export default function AdminProductos() {
                 <button type="button" onClick={() => setSelectedProduct(null)} className={`${styles.cancelBtn} pressable`}>
                   Cancelar
                 </button>
-                <button type="submit" className={`${styles.submitBtn} pressable`} disabled={saving}>
+                <button type="submit" className={`${styles.submitBtn} pressable`} disabled={saving || exceedsStock}>
                   {saving ? "Guardando…" : "Confirmar Registro"}
                 </button>
               </div>

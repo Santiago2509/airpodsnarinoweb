@@ -8,6 +8,7 @@ import { Product } from "@/lib/types";
 import Modal from "@/components/Modal";
 import ProductCard from "@/components/ProductCard";
 import { PLACEHOLDER_IMAGE, formatPrice, whatsappUrl } from "@/lib/site";
+import { CATEGORIES, normalize, productCategory } from "@/lib/categories";
 import styles from "./catalogo.module.css";
 
 type Sort = "recent" | "price-asc" | "price-desc";
@@ -27,6 +28,10 @@ function getProductImages(product: Product) {
   return images.length > 0 ? images : [PLACEHOLDER_IMAGE];
 }
 
+function askMessage(name: string) {
+  return `¡Hola! Vi que ${name} está agotado. ¿Me avisan cuando vuelva a llegar?`;
+}
+
 function buyMessage(name: string) {
   return `¡Hola! Estoy interesado en comprar ${name}. ¿Me podrías dar más información?`;
 }
@@ -35,9 +40,6 @@ function fallbackImage(e: React.SyntheticEvent<HTMLImageElement>) {
   if (!e.currentTarget.src.endsWith(PLACEHOLDER_IMAGE)) e.currentTarget.src = PLACEHOLDER_IMAGE;
 }
 
-function normalize(text: string) {
-  return text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-}
 
 export default function CatalogoPage() {
   const { products, isLoading, hasLoadedProducts } = useProductStore();
@@ -49,6 +51,15 @@ export default function CatalogoPage() {
   );
   const [typedQuery, setTypedQuery] = useState<string | undefined>(undefined);
   const query = typedQuery ?? urlQuery;
+
+  // Category from a home tile (/catalogo?categoria=cables), then from the chips
+  const urlCategory = useSyncExternalStore(
+    noopSubscribe,
+    () => new URLSearchParams(window.location.search).get("categoria") ?? "all",
+    () => "all"
+  );
+  const [pickedCategory, setPickedCategory] = useState<string | undefined>(undefined);
+  const category = pickedCategory ?? urlCategory;
   const setQuery = setTypedQuery;
   const [sort, setSort] = useState<Sort>("recent");
 
@@ -62,17 +73,24 @@ export default function CatalogoPage() {
   const activeId = selectedId === undefined ? productFromUrl : selectedId;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const available = useMemo(() => products.filter((p) => p.status === "active" && p.stock > 0), [products]);
+  // Every active product is shown; sold-out ones stay visible with an "Agotado" badge
+  const available = useMemo(() => products.filter((p) => p.status === "active"), [products]);
+  const categoriesInUse = useMemo(
+    () => CATEGORIES.filter((c) => available.some((p) => productCategory(p) === c.id)),
+    [available]
+  );
 
   const visible = useMemo(() => {
     const q = normalize(query.trim());
     const list = q
       ? available.filter((p) => normalize(`${p.name} ${p.description}`).includes(q))
       : [...available];
-    if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
-    if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
-    return list;
-  }, [available, query, sort]);
+    const inCategory = category === "all" ? list : list.filter((p) => productCategory(p) === category);
+    if (sort === "price-asc") inCategory.sort((a, b) => a.price - b.price);
+    if (sort === "price-desc") inCategory.sort((a, b) => b.price - a.price);
+    // Sold-out products go last, keeping the chosen order otherwise
+    return [...inCategory.filter((p) => p.stock > 0), ...inCategory.filter((p) => p.stock <= 0)];
+  }, [available, query, sort, category]);
 
   const selectedProduct = available.find((p) => p.id === activeId) ?? null;
   const images = selectedProduct ? getProductImages(selectedProduct) : [];
@@ -155,6 +173,22 @@ export default function CatalogoPage() {
             ))}
           </div>
         </div>
+        {categoriesInUse.length > 0 && (
+          <div className={styles.categories} role="radiogroup" aria-label="Categoría">
+            {[{ id: "all", label: "Todo" }, ...categoriesInUse].map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                role="radio"
+                aria-checked={category === c.id}
+                className={styles.categoryChip}
+                onClick={() => setPickedCategory(c.id)}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        )}
         {!loading && available.length > 0 && (
           <p className={styles.count} aria-live="polite">
             <span className="tabular">{visible.length}</span> {countLabel}
@@ -172,7 +206,11 @@ export default function CatalogoPage() {
         ) : visible.length === 0 ? (
           <div className={styles.empty}>
             <p className={styles.emptyTitle}>
-              {available.length === 0 ? "Pronto tendremos productos aquí." : `No encontramos “${query}”.`}
+              {available.length === 0
+                ? "Pronto tendremos productos aquí."
+                : query.trim()
+                  ? `No encontramos “${query}”.`
+                  : "Por ahora no hay productos en esta categoría."}
             </p>
             <p className={styles.emptyText}>Escríbenos y te contamos qué tenemos disponible hoy.</p>
             <a
@@ -193,16 +231,28 @@ export default function CatalogoPage() {
                 className={styles.item}
                 style={{ animationDelay: `${Math.min(index, 6) * 40}ms` }}
               >
-                <ProductCard product={product} onSelect={() => openModal(product)} eager={index < 6}>
-                  <a
-                    href={whatsappUrl(buyMessage(product.name))}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`btn btnWhatsapp ${styles.buy}`}
-                  >
-                    <MessageCircle size={18} aria-hidden="true" />
-                    Comprar por WhatsApp
-                  </a>
+                <ProductCard product={product} onSelect={() => openModal(product)} eager={index < 6} soldOut={product.stock <= 0}>
+                  {product.stock > 0 ? (
+                    <a
+                      href={whatsappUrl(buyMessage(product.name))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`btn btnWhatsapp ${styles.buy}`}
+                    >
+                      <MessageCircle size={18} aria-hidden="true" />
+                      Comprar por WhatsApp
+                    </a>
+                  ) : (
+                    <a
+                      href={whatsappUrl(askMessage(product.name))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`btn btnGhost ${styles.buy}`}
+                    >
+                      <MessageCircle size={18} aria-hidden="true" />
+                      Avisarme cuando llegue
+                    </a>
+                  )}
                 </ProductCard>
               </li>
             ))}
@@ -271,7 +321,7 @@ export default function CatalogoPage() {
               </div>
 
               <div className={styles.details}>
-                <p className="eyebrow">Disponible</p>
+                <p className="eyebrow">{selectedProduct.stock > 0 ? "Disponible" : "Agotado por ahora"}</p>
                 <h2 id="product-modal-title" className={styles.modalTitle}>{selectedProduct.name}</h2>
                 <p className={styles.modalPrice}>
                   <span className="tabular">{formatPrice(selectedProduct.price)}</span>
@@ -285,13 +335,15 @@ export default function CatalogoPage() {
                   <li>Asesoría por WhatsApp</li>
                 </ul>
                 <a
-                  href={whatsappUrl(buyMessage(selectedProduct.name))}
+                  href={whatsappUrl(
+                    selectedProduct.stock > 0 ? buyMessage(selectedProduct.name) : askMessage(selectedProduct.name)
+                  )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`btn btnWhatsapp ${styles.modalBuy}`}
+                  className={`btn ${selectedProduct.stock > 0 ? "btnWhatsapp" : "btnGhost"} ${styles.modalBuy}`}
                 >
                   <MessageCircle size={20} aria-hidden="true" />
-                  Comprar por WhatsApp
+                  {selectedProduct.stock > 0 ? "Comprar por WhatsApp" : "Avisarme cuando llegue"}
                 </a>
               </div>
             </div>

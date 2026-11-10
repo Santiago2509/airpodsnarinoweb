@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useProductStore } from "@/store/useProductStore";
 import styles from "./dashboard.module.css";
 import { Package, TrendingUp, AlertCircle, DollarSign, Activity, Clock, Boxes } from "lucide-react";
@@ -33,6 +34,7 @@ function LiveClock() {
             : "..."}
         </span>
       </div>
+
     </div>
   );
 }
@@ -79,7 +81,8 @@ export default function AdminDashboard() {
     .reduce((acc, t) => acc + t.totalAmount, 0);
 
   const totalStock = products.reduce((acc, p) => acc + p.stock, 0);
-  const lowStockProducts = products.filter((p) => p.stock < 10).length;
+  const lowStock = products.filter((p) => p.status === "active" && p.stock < 10).sort((a, b) => a.stock - b.stock);
+  const lowStockProducts = lowStock.length;
   const salesCountLabel = new Intl.PluralRules("es-CO").select(todaysSales.length) === "one" ? "venta" : "ventas";
 
   return (
@@ -109,6 +112,29 @@ export default function AdminDashboard() {
         <Stat label="Unidades en Stock" value={totalStock} icon={Boxes} tone="cyan" />
         <Stat label="Stock Bajo" value={lowStockProducts} icon={AlertCircle} tone="red" />
       </div>
+
+      <section className={styles.panel} aria-labelledby="restock-title">
+        <div className={styles.panelHead}>
+          <h2 id="restock-title">Para reponer</h2>
+          <Link href="/admin/productos" className={styles.panelLink}>
+            Ver productos
+          </Link>
+        </div>
+        {lowStock.length === 0 ? (
+          <p className={styles.panelEmpty}>Todo tiene buen stock.</p>
+        ) : (
+          <ul className={styles.restock}>
+            {lowStock.slice(0, 8).map((p) => (
+              <li key={p.id}>
+                <span className={styles.restockName}>{p.name}</span>
+                <span className={`${styles.restockStock} tabular`} data-out={p.stock === 0 ? "" : undefined}>
+                  {p.stock === 0 ? "Agotado" : `${p.stock} ${p.stock === 1 ? "unidad" : "unidades"}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

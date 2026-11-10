@@ -16,12 +16,12 @@ import styles from "./Categories.module.css";
 
 const ease = [0.23, 1, 0.32, 1] as const;
 
-// Each tile opens the catalog with a search already applied
+// Each tile opens the catalog filtered by that category
 const CATEGORIES = [
   { art: AirPodsIllustration, title: "AirPods", text: "Pro, 4, Max y más", q: "airpods", size: "large" },
-  { art: ChargerIllustration, title: "Cargadores", text: "MagSafe, USB-C, carga rápida", q: "cargador", size: "" },
-  { art: CableIllustration, title: "Cables", text: "Lightning y USB-C", q: "cable", size: "" },
-  { art: CaseIllustration, title: "Estuches", text: "Protección con estilo", q: "estuche", size: "" },
+  { art: ChargerIllustration, title: "Cargadores", text: "MagSafe, USB-C, carga rápida", q: "cargadores", size: "" },
+  { art: CableIllustration, title: "Cables", text: "Lightning y USB-C", q: "cables", size: "" },
+  { art: CaseIllustration, title: "Estuches", text: "Protección con estilo", q: "estuches", size: "" },
   { art: WatchIllustration, title: "Apple Watch", text: "Correas y accesorios", q: "watch", size: "" },
   { art: BagIllustration, title: "Todo el catálogo", text: "Mira todo lo disponible hoy", q: "", size: "wide" },
 ];
@@ -60,7 +60,7 @@ export default function Categories() {
                 show: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
               }}
             >
-              <Link href={q ? `/catalogo?q=${q}` : "/catalogo"} className={styles.tile}>
+              <Link href={q ? `/catalogo?categoria=${q}` : "/catalogo"} className={styles.tile}>
                 <span className={styles.art}>
                   <Art />
                 </span>
