@@ -1,0 +1,203 @@
+.section {
+  padding: clamp(4rem, 10vw, 7rem) 0;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: 2.5rem;
+}
+
+.title {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.subtitle {
+  max-width: 50ch;
+  color: var(--text-muted);
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+
+/* Bento: AirPods is the big tile, "all" spans the bottom */
+.grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(170px, auto);
+  gap: 1rem;
+}
+
+.cell {
+  display: flex;
+}
+
+.large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.wide {
+  grid-column: span 2;
+}
+
+.tile {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--background-elevated);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--duration-press) var(--ease-out),
+    border-color var(--duration-hover) ease,
+    box-shadow 300ms ease;
+}
+
+.tile:active {
+  transform: scale(0.98);
+}
+
+.large .tile {
+  background:
+    radial-gradient(circle at 80% 85%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 55%),
+    var(--stage);
+  color: #f5f7fb;
+  border-color: rgba(255, 255, 255, 0.08);
+  padding: 2rem;
+}
+
+.icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.large .icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #7dd3fc;
+}
+
+.tileText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.tileTitle {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.large .tileTitle {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  letter-spacing: -0.05em;
+}
+
+.tileSub {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.large .tileSub {
+  color: #c3cbd9;
+  font-size: 1.05rem;
+}
+
+.arrow {
+  position: absolute;
+  top: 1.4rem;
+  right: 1.4rem;
+  color: var(--text-subtle);
+  transition: transform 300ms var(--ease-out), color var(--duration-hover) ease;
+}
+
+/* Sound rings in the AirPods tile */
+.ring {
+  position: absolute;
+  z-index: -1;
+  right: -18%;
+  bottom: -30%;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgba(125, 211, 252, 0.25);
+  box-shadow:
+    0 0 0 40px rgba(125, 211, 252, 0.04),
+    0 0 0 80px rgba(125, 211, 252, 0.03),
+    0 0 0 120px rgba(125, 211, 252, 0.02);
+  transition: transform 600ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover {
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+    box-shadow: var(--shadow-md);
+  }
+
+  .tile:hover .arrow {
+    color: var(--accent);
+    transform: translate(3px, -3px);
+  }
+
+  .large .tile:hover .ring {
+    transform: scale(1.08);
+  }
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(150px, auto);
+  }
+
+  .large,
+  .wide {
+    grid-column: span 2;
+  }
+
+  .large {
+    grid-row: span 1;
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 420px) {
+  .tile {
+    padding: 1.1rem;
+  }
+
+  .tileTitle {
+    font-size: 1.15rem;
+  }
+
+  .tileSub {
+    font-size: 0.82rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow,
+  .ring {
+    transition: none;
+  }
+}

@@ -1,0 +1,201 @@
+/*
+ * Timeline (first visit, ~2.6s, never blocks the page):
+ *   0–1400ms     ring draws clockwise from the top, glowing tip leads
+ *   900–1600ms   mountain rises and brightens
+ *   1300–1900ms  AirPods case materializes behind it
+ *   1600–2600ms  light band sweeps across
+ *   then         a glint travels the ring every ~7s
+ */
+.emblem {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.svg {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 30px 60px rgba(3, 10, 30, 0.45));
+}
+
+/* Start the ring at 12 o'clock */
+.ring,
+.tip,
+.glint {
+  transform: rotate(-90deg);
+  transform-origin: 100px 100px;
+}
+
+.ring {
+  stroke-dasharray: 100 100;
+}
+
+.tip,
+.glint {
+  stroke-dasharray: 3 97;
+  opacity: 0;
+}
+
+.mountain {
+  transform-origin: 100px 72px;
+}
+
+.case,
+.led {
+  transform-origin: 100px 120px;
+}
+
+/* ---------- Intro ---------- */
+
+.emblem[data-animate] .disc {
+  animation: discIn 900ms var(--ease-out) both;
+}
+
+.emblem[data-animate] .ring {
+  animation: ringDraw 1400ms var(--ease-in-out) both;
+}
+
+.emblem[data-animate] .tip {
+  animation: tipTravel 1400ms var(--ease-in-out) both;
+}
+
+.emblem[data-animate] .mountain {
+  animation: mountainIn 700ms var(--ease-out) 900ms both;
+}
+
+.emblem[data-animate] .case {
+  animation: caseIn 600ms var(--ease-out) 1300ms both;
+}
+
+.emblem[data-animate] .led {
+  animation: ledPulse 2.4s ease-in-out 2000ms 2;
+}
+
+.emblem[data-animate] .streak {
+  animation: streakIn 1000ms var(--ease-out) 1600ms both;
+}
+
+.emblem[data-animate] .glint {
+  animation: glint 7s var(--ease-in-out) 3.5s infinite;
+}
+
+@keyframes discIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ringDraw {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes tipTravel {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 3;
+  }
+  10% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -97;
+  }
+}
+
+@keyframes mountainIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+    filter: brightness(0.4);
+  }
+}
+
+@keyframes caseIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@keyframes ledPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* The glint travels once around the ring, then rests for the rest of the cycle */
+@keyframes glint {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 3;
+  }
+  4% {
+    opacity: 0.9;
+  }
+  26% {
+    opacity: 0.9;
+  }
+  30%,
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -97;
+  }
+}
+
+/* ---------- Light band ---------- */
+
+.streak {
+  position: absolute;
+  z-index: 0;
+  left: -60%;
+  right: -60%;
+  top: 58%;
+  height: 16%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(96, 165, 250, 0.75) 0%, rgba(56, 189, 248, 0.25) 35%, transparent 70%);
+  filter: blur(6px);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+@keyframes streakIn {
+  from {
+    opacity: 0;
+    transform: scaleX(0.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emblem[data-animate] .disc,
+  .emblem[data-animate] .ring,
+  .emblem[data-animate] .tip,
+  .emblem[data-animate] .mountain,
+  .emblem[data-animate] .case,
+  .emblem[data-animate] .led,
+  .emblem[data-animate] .streak,
+  .emblem[data-animate] .glint {
+    animation: none;
+  }
+
+  .ring {
+    stroke-dashoffset: 0;
+  }
+}

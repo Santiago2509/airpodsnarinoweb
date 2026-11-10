@@ -1,0 +1,262 @@
+/* Pinned on desktop: the scene assembles while the visitor scrolls through it */
+.section {
+  position: relative;
+  height: 230svh;
+  overflow-x: clip;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* ---------- Giant type ---------- */
+
+.bgType {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5vw;
+  pointer-events: none;
+  user-select: none;
+}
+
+.row {
+  white-space: nowrap;
+  font-size: clamp(5rem, 13vw, 13rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: var(--surface-muted);
+  will-change: transform;
+}
+
+[data-theme="dark"] .row {
+  color: rgba(255, 255, 255, 0.035);
+}
+
+.rowOutline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--border-strong);
+}
+
+/* ---------- Layout ---------- */
+
+.layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 2rem;
+  height: 100%;
+  padding-top: 5rem;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.title {
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.text {
+  max-width: 44ch;
+  font-size: 1.12rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.stats {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  max-width: 460px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--border);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.35rem;
+  padding: 1.1rem 1rem;
+  background: var(--background-elevated);
+}
+
+.stat dd {
+  font-family: var(--font-orbitron);
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stat dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+/* ---------- Stage: Axel + floating chips ---------- */
+
+.stage {
+  position: relative;
+  height: min(86svh, 760px);
+  align-self: end;
+}
+
+.glow {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  width: 90%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 35%, transparent) 0%, transparent 62%);
+  filter: blur(10px);
+}
+
+.axel {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+
+.axelImg {
+  object-fit: contain;
+  object-position: 50% 100%;
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.25));
+}
+
+.chip {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.95rem 0.55rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: var(--shadow-md);
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+.chipIcon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.chipText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.chipLabel {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.chipSub {
+  font-size: 0.74rem;
+  color: var(--text-subtle);
+}
+
+.chip1 { top: 14%; left: -4%; }
+.chip2 { top: 30%; right: -2%; }
+.chip3 { top: 48%; left: -8%; }
+.chip4 { top: 62%; right: -6%; }
+.chip5 { top: 6%; right: 14%; }
+
+/* ---------- Phones: no pin, stacked scene ---------- */
+
+@media (max-width: 900px) {
+  .section {
+    height: auto;
+    padding: 4rem 0 2rem;
+  }
+
+  .sticky {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    padding-top: 0;
+    height: auto;
+  }
+
+  .stage {
+    order: -1;
+    height: 62svh;
+    min-height: 380px;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+  }
+
+  .bgType {
+    top: 0;
+    bottom: auto;
+    height: 62svh;
+    min-height: 380px;
+  }
+
+  .row {
+    font-size: 22vw;
+  }
+
+  .chip {
+    padding: 0.4rem 0.75rem 0.4rem 0.4rem;
+  }
+
+  .chipIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .chipSub {
+    display: none;
+  }
+
+  .chip1 { top: 10%; left: 2%; }
+  .chip2 { top: 26%; right: 2%; }
+  .chip3 { top: 48%; left: 2%; }
+  .chip4 { display: none; }
+  .chip5 { display: none; }
+
+  .stats {
+    max-width: none;
+  }
+}

@@ -142,7 +142,7 @@
 .wordmark {
   padding: 0 var(--gutter);
   font-family: var(--font-orbitron);
-  font-size: clamp(3rem, 13vw, 11.5rem);
+  font-size: clamp(2.5rem, 9.4vw, 9rem);
   font-weight: 800;
   line-height: 0.8;
   letter-spacing: -0.02em;

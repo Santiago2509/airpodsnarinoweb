@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { ShieldCheck, Truck, Headphones, Sparkles } from "lucide-react";
 import styles from "./Showcase.module.css";
 
-// Desktop: 192 frames at 1280×720. Phones: every other frame at 640×360.
+// Desktop: frames 3–156 at 1280×720. Phones: every other frame at 640×360.
+// The first and last frames of the render are an empty stage, so they are skipped.
 const SETS = {
-  desktop: { count: 192, width: 1280, height: 720, path: (i: number) => `/3d/desktop/${String(i).padStart(3, "0")}.webp` },
-  mobile: { count: 96, width: 640, height: 360, path: (i: number) => `/3d/mobile/${String(i).padStart(3, "0")}.webp` },
+  desktop: { first: 3, last: 156, width: 1280, height: 720, path: (i: number) => `/3d/desktop/${String(i).padStart(3, "0")}.webp` },
+  mobile: { first: 2, last: 78, width: 640, height: 360, path: (i: number) => `/3d/mobile/${String(i).padStart(3, "0")}.webp` },
 };
 
 const STEPS = [
@@ -55,8 +56,9 @@ export default function Showcase() {
     const set = isSmall ? SETS.mobile : SETS.desktop;
     canvas.width = set.width;
     canvas.height = set.height;
+    const count = set.last - set.first + 1;
 
-    const frames: (HTMLImageElement | null)[] = new Array(set.count).fill(null);
+    const frames: (HTMLImageElement | null)[] = new Array(count).fill(null);
     let current = -1;
     let ticking = false;
     let started = false;
@@ -65,7 +67,7 @@ export default function Showcase() {
 
     const draw = (index: number) => {
       // Draw the requested frame, or the nearest one that has already loaded
-      for (let offset = 0; offset < set.count; offset++) {
+      for (let offset = 0; offset < count; offset++) {
         const img = frames[index - offset] ?? frames[index + offset];
         if (img) {
           context.clearRect(0, 0, canvas.width, canvas.height);
@@ -94,7 +96,7 @@ export default function Showcase() {
         setStep(nextStep);
       }
 
-      const index = reduceMotion ? set.count - 1 : Math.min(set.count - 1, Math.floor(p * set.count));
+      const index = reduceMotion ? Math.floor(count * 0.6) : Math.min(count - 1, Math.floor(p * count));
       if (index === current) return;
       current = index;
       draw(index);
@@ -109,7 +111,7 @@ export default function Showcase() {
     const load = () => {
       if (started) return;
       started = true;
-      const order = reduceMotion ? [set.count - 1] : Array.from({ length: set.count }, (_, i) => i);
+      const order = reduceMotion ? [Math.floor(count * 0.6)] : Array.from({ length: count }, (_, i) => i);
       order.forEach((index) => {
         const img = new Image();
         img.decoding = "async";
@@ -120,11 +122,11 @@ export default function Showcase() {
           current = -1;
           onScroll();
         };
-        img.src = set.path(index + 1);
+        img.src = set.path(set.first + index);
       });
     };
 
-    // Start downloading only when the section is about a screen away
+    // Start downloading about two screens before the section arrives
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
@@ -132,7 +134,7 @@ export default function Showcase() {
           observer.disconnect();
         }
       },
-      { rootMargin: "100% 0px" }
+      { rootMargin: "250% 0px" }
     );
     observer.observe(section);
 

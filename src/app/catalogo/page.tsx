@@ -41,7 +41,15 @@ function normalize(text: string) {
 
 export default function CatalogoPage() {
   const { products, isLoading, hasLoadedProducts } = useProductStore();
-  const [query, setQuery] = useState("");
+  // A category link like /catalogo?q=cargador arrives with the search applied
+  const urlQuery = useSyncExternalStore(
+    noopSubscribe,
+    () => new URLSearchParams(window.location.search).get("q") ?? "",
+    () => ""
+  );
+  const [typedQuery, setTypedQuery] = useState<string | undefined>(undefined);
+  const query = typedQuery ?? urlQuery;
+  const setQuery = setTypedQuery;
   const [sort, setSort] = useState<Sort>("recent");
 
   // undefined = untouched, so a link like /catalogo?producto=<id> opens that product
