@@ -7,12 +7,70 @@
  *  2100–3100ms   band of light sweeps across, behind the glass
  *  then          a glint travels the ring every ~7s
  */
+/* Light theme logo: silver disc, ink mountain, frosted case */
 .emblem {
+  --be-disc-1: #ffffff;
+  --be-disc-2: #e3e9f1;
+  --be-ring-1: #ffffff;
+  --be-ring-2: #9aa4b3;
+  --be-ring-3: #eef2f7;
+  --be-ring-4: #6f7a8a;
+  --be-ring-5: #c9d1dc;
+  --be-ring-edge: rgba(15, 23, 42, 0.18);
+  --be-snow-1: #24334f;
+  --be-snow-2: #0b1220;
+  --be-interior: #d9e1ec;
+  --be-well: #c3cddb;
+  --be-well-edge: rgba(15, 23, 42, 0.12);
+  --be-rim: #7d8898;
+  --be-glass-1: #ffffff;
+  --be-glass-2: #c9d6e8;
+  --be-glass-o1: 0.85;
+  --be-glass-o2: 0.55;
+  --be-glass-o3: 0.8;
+  --be-edge: rgba(15, 23, 42, 0.22);
+  --be-lip: rgba(15, 23, 42, 0.3);
+  --be-tab: rgba(15, 23, 42, 0.14);
+  --be-led: #0a7cff;
+  --be-band: #0a7cff;
+  --be-band-opacity: 0.45;
+  --be-shadow: drop-shadow(0 30px 50px rgba(15, 23, 42, 0.18));
+
   position: relative;
   width: 100%;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
+}
+
+/* Dark theme logo: the original brand frame */
+:global([data-theme="dark"]) .emblem {
+  --be-disc-1: #0f1a30;
+  --be-disc-2: #03060d;
+  --be-ring-1: #ffffff;
+  --be-ring-2: #aab4c2;
+  --be-ring-3: #f4f7fb;
+  --be-ring-4: #7c8695;
+  --be-ring-5: #e3e8ee;
+  --be-ring-edge: rgba(0, 0, 0, 0.55);
+  --be-snow-1: #ffffff;
+  --be-snow-2: #ccd5e1;
+  --be-interior: #070c18;
+  --be-well: #03060d;
+  --be-well-edge: rgba(255, 255, 255, 0.1);
+  --be-rim: #aeb7c3;
+  --be-glass-1: #c9d8ee;
+  --be-glass-2: #7f97b8;
+  --be-glass-o1: 0.2;
+  --be-glass-o2: 0.1;
+  --be-glass-o3: 0.16;
+  --be-edge: rgba(255, 255, 255, 0.42);
+  --be-lip: rgba(255, 255, 255, 0.55);
+  --be-tab: rgba(255, 255, 255, 0.22);
+  --be-led: #ffffff;
+  --be-band: #7cb7ff;
+  --be-band-opacity: 0.85;
+  --be-shadow: drop-shadow(0 30px 60px rgba(3, 10, 30, 0.5));
 }
 
 .svg {
@@ -21,7 +79,7 @@
   width: 100%;
   height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 30px 60px rgba(3, 10, 30, 0.5));
+  filter: var(--be-shadow);
 }
 
 .ring,

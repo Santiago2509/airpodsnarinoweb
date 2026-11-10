@@ -9,6 +9,7 @@ interface BrandEmblemProps {
 
 /**
  * The Airpods Nariño logo as live SVG, matching the last frame of the brand film.
+ * Colors come from CSS variables: a dark logo on the dark theme, a light one on the light theme.
  *
  * Intro (first visit, ~3s, pure CSS so it runs smoothly while the page loads):
  *   1. the metallic ring draws itself with a glowing tip
@@ -26,19 +27,19 @@ export default function BrandEmblem({ animate = true, className }: BrandEmblemPr
       <svg className={styles.svg} viewBox="0 0 200 200" role="presentation">
         <defs>
           <linearGradient id="be-ring" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#ffffff" />
-            <stop offset="0.3" stopColor="#aab4c2" />
-            <stop offset="0.5" stopColor="#f4f7fb" />
-            <stop offset="0.75" stopColor="#7c8695" />
-            <stop offset="1" stopColor="#e3e8ee" />
+            <stop offset="0" style={{ stopColor: "var(--be-ring-1)" }} />
+            <stop offset="0.3" style={{ stopColor: "var(--be-ring-2)" }} />
+            <stop offset="0.5" style={{ stopColor: "var(--be-ring-3)" }} />
+            <stop offset="0.75" style={{ stopColor: "var(--be-ring-4)" }} />
+            <stop offset="1" style={{ stopColor: "var(--be-ring-5)" }} />
           </linearGradient>
           <radialGradient id="be-disc" cx="0.5" cy="0.42" r="0.62">
-            <stop offset="0" stopColor="#0f1a30" />
-            <stop offset="1" stopColor="#03060d" />
+            <stop offset="0" style={{ stopColor: "var(--be-disc-1)" }} />
+            <stop offset="1" style={{ stopColor: "var(--be-disc-2)" }} />
           </radialGradient>
           <linearGradient id="be-band" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor="#3b82f6" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#7cb7ff" stopOpacity="0.85" />
+            <stop offset="0.5" style={{ stopColor: "var(--be-band)", stopOpacity: "var(--be-band-opacity)" }} />
             <stop offset="1" stopColor="#3b82f6" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="be-band-v" x1="0" y1="0" x2="0" y2="1">
@@ -50,9 +51,9 @@ export default function BrandEmblem({ animate = true, className }: BrandEmblemPr
             <rect x="0" y="92" width="200" height="22" fill="url(#be-band-v)" />
           </mask>
           <linearGradient id="be-glass" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#c9d8ee" stopOpacity="0.2" />
-            <stop offset="0.45" stopColor="#7f97b8" stopOpacity="0.1" />
-            <stop offset="1" stopColor="#c9d8ee" stopOpacity="0.16" />
+            <stop offset="0" style={{ stopColor: "var(--be-glass-1)", stopOpacity: "var(--be-glass-o1)" }} />
+            <stop offset="0.45" style={{ stopColor: "var(--be-glass-2)", stopOpacity: "var(--be-glass-o2)" }} />
+            <stop offset="1" style={{ stopColor: "var(--be-glass-1)", stopOpacity: "var(--be-glass-o3)" }} />
           </linearGradient>
           <linearGradient id="be-sheen" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor="#ffffff" stopOpacity="0.22" />
@@ -65,8 +66,8 @@ export default function BrandEmblem({ animate = true, className }: BrandEmblemPr
             <stop offset="1" stopColor="#9fb1ca" stopOpacity="0.28" />
           </linearGradient>
           <linearGradient id="be-snow" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#ffffff" />
-            <stop offset="1" stopColor="#ccd5e1" />
+            <stop offset="0" style={{ stopColor: "var(--be-snow-1)" }} />
+            <stop offset="1" style={{ stopColor: "var(--be-snow-2)" }} />
           </linearGradient>
           <radialGradient id="be-burst" cx="0.5" cy="0.5" r="0.5">
             <stop offset="0" stopColor="#ffffff" stopOpacity="1" />
@@ -103,11 +104,11 @@ export default function BrandEmblem({ animate = true, className }: BrandEmblemPr
             {/* Lid: frame + the earbud wells inside, lifts open */}
             <g className={styles.lid}>
               {/* Inside of the case, with the two earbud wells */}
-              <path d="M52 76 V52 a14 14 0 0 1 14 -14 H134 a14 14 0 0 1 14 14 V76 Z" fill="#070c18" />
-              <circle cx="66" cy="52" r="8.5" fill="#03060d" stroke="#ffffff" strokeOpacity="0.1" />
-              <circle cx="134" cy="52" r="8.5" fill="#03060d" stroke="#ffffff" strokeOpacity="0.1" />
+              <path d="M52 76 V52 a14 14 0 0 1 14 -14 H134 a14 14 0 0 1 14 14 V76 Z" style={{ fill: "var(--be-interior)" }} />
+              <circle cx="66" cy="52" r="8.5" style={{ fill: "var(--be-well)", stroke: "var(--be-well-edge)" }} />
+              <circle cx="134" cy="52" r="8.5" style={{ fill: "var(--be-well)", stroke: "var(--be-well-edge)" }} />
               {/* The lid rim: top and sides only, the mountain covers the rest */}
-              <path d="M52 70 V52 a14 14 0 0 1 14 -14 H134 a14 14 0 0 1 14 14 V70" fill="none" stroke="#aeb7c3" strokeWidth="3.4" strokeLinecap="round" />
+              <path d="M52 70 V52 a14 14 0 0 1 14 -14 H134 a14 14 0 0 1 14 14 V70" fill="none" style={{ stroke: "var(--be-rim)" }} strokeWidth="3.4" strokeLinecap="round" />
               <path className={styles.lidCover} d="M52 76 V52 a14 14 0 0 1 14 -14 H134 a14 14 0 0 1 14 14 V76 Z" fill="url(#be-lid-cover)" />
             </g>
 
@@ -121,18 +122,18 @@ export default function BrandEmblem({ animate = true, className }: BrandEmblemPr
 
             {/* Body: dark glass with the band showing through */}
             <g className={styles.body}>
-              <rect x="51" y="74" width="98" height="90" rx="15" fill="url(#be-glass)" stroke="#ffffff" strokeOpacity="0.42" strokeWidth="1.2" />
+              <rect x="51" y="74" width="98" height="90" rx="15" fill="url(#be-glass)" style={{ stroke: "var(--be-edge)" }} strokeWidth="1.2" />
               <rect x="51" y="74" width="98" height="90" rx="15" fill="url(#be-sheen)" />
-              <line x1="55" y1="74.6" x2="145" y2="74.6" stroke="#ffffff" strokeOpacity="0.55" strokeWidth="0.9" />
-              <rect x="78" y="74" width="44" height="4" rx="2" fill="#ffffff" fillOpacity="0.22" />
-              <circle className={styles.led} cx="100" cy="146" r="2.4" fill="#ffffff" />
+              <line x1="55" y1="74.6" x2="145" y2="74.6" style={{ stroke: "var(--be-lip)" }} strokeWidth="0.9" />
+              <rect x="78" y="74" width="44" height="4" rx="2" style={{ fill: "var(--be-tab)" }} />
+              <circle className={styles.led} cx="100" cy="146" r="2.4" style={{ fill: "var(--be-led)" }} />
             </g>
           </g>
         </g>
 
         {/* Ring: metallic stroke with a fine inner edge, plus the drawing tip */}
         <circle className={styles.ring} cx="100" cy="100" r="90" fill="none" stroke="url(#be-ring)" strokeWidth="6" strokeLinecap="round" pathLength={100} />
-        <circle className={styles.ringEdge} cx="100" cy="100" r="86.6" fill="none" stroke="#000000" strokeOpacity="0.55" strokeWidth="0.8" />
+        <circle className={styles.ringEdge} cx="100" cy="100" r="86.6" fill="none" style={{ stroke: "var(--be-ring-edge)" }} strokeWidth="0.8" />
         <circle className={styles.tip} cx="100" cy="100" r="90" fill="none" stroke="#d6eeff" strokeWidth="8" strokeLinecap="round" pathLength={100} filter="url(#be-glow)" />
         <circle className={styles.glint} cx="100" cy="100" r="90" fill="none" stroke="#ffffff" strokeWidth="6" strokeLinecap="round" pathLength={100} filter="url(#be-glow)" />
       </svg>
