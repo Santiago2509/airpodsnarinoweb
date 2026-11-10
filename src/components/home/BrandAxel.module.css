@@ -33,17 +33,24 @@
   font-weight: 800;
   line-height: 0.9;
   letter-spacing: -0.05em;
-  color: var(--surface-muted);
+  color: var(--bg-type-fill);
   will-change: transform;
-}
-
-[data-theme="dark"] .row {
-  color: rgba(255, 255, 255, 0.035);
 }
 
 .rowOutline {
   color: transparent;
-  -webkit-text-stroke: 1.5px var(--border-strong);
+  -webkit-text-stroke: 2px var(--bg-type-stroke);
+}
+
+/* Strong enough to read as part of the scene, soft enough to keep Axel's copy legible */
+.section {
+  --bg-type-fill: rgba(15, 23, 42, 0.085);
+  --bg-type-stroke: rgba(10, 124, 255, 0.38);
+}
+
+[data-theme="dark"] .section {
+  --bg-type-fill: rgba(255, 255, 255, 0.075);
+  --bg-type-stroke: rgba(125, 211, 252, 0.34);
 }
 
 /* ---------- Layout ---------- */
