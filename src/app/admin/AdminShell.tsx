@@ -7,6 +7,7 @@ import type { Session } from "@supabase/supabase-js";
 import { LayoutDashboard, Package, LogOut, FileText, DollarSign } from "lucide-react";
 import { Toaster } from "sonner";
 import { supabase } from "@/lib/supabase";
+import { ADMIN_LOGIN_REQUIRED } from "@/lib/site";
 import { useProductStore } from "@/store/useProductStore";
 import LoginForm from "./LoginForm";
 import styles from "./admin.module.css";
@@ -21,11 +22,12 @@ const NAV = [
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [session, setSession] = useState<Session | null>(null);
-  const [checking, setChecking] = useState(true);
+  const [checking, setChecking] = useState(ADMIN_LOGIN_REQUIRED);
   const fetchAdminProducts = useProductStore((s) => s.fetchAdminProducts);
   const fetchTransactions = useProductStore((s) => s.fetchTransactions);
 
   useEffect(() => {
+    if (!ADMIN_LOGIN_REQUIRED) return;
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setChecking(false);
@@ -36,12 +38,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  // Private data is only requested once someone is signed in
+  // Private data is only requested once someone is signed in (or when login is off)
+  const allowed = !ADMIN_LOGIN_REQUIRED || session !== null;
   useEffect(() => {
-    if (!session) return;
+    if (!allowed) return;
     fetchAdminProducts();
     fetchTransactions();
-  }, [session, fetchAdminProducts, fetchTransactions]);
+  }, [allowed, fetchAdminProducts, fetchTransactions]);
 
   const toaster = <Toaster theme="dark" position="bottom-right" richColors closeButton />;
 
@@ -49,7 +52,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     return <div className={styles.authLoading} data-theme="dark" aria-busy="true" />;
   }
 
-  if (!session) {
+  if (!allowed) {
     return (
       <div data-theme="dark">
         <LoginForm />
@@ -78,17 +81,19 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             </Link>
           ))}
         </nav>
-        <div className={styles.sidebarFooter}>
-          <button
-            type="button"
-            className={styles.logoutButton}
-            onClick={() => supabase.auth.signOut()}
-            aria-label="Cerrar sesión"
-          >
-            <LogOut size={20} aria-hidden="true" />
-            <span>Cerrar Sesión</span>
-          </button>
-        </div>
+        {ADMIN_LOGIN_REQUIRED && (
+          <div className={styles.sidebarFooter}>
+            <button
+              type="button"
+              className={styles.logoutButton}
+              onClick={() => supabase.auth.signOut()}
+              aria-label="Cerrar sesión"
+            >
+              <LogOut size={20} aria-hidden="true" />
+              <span>Cerrar Sesión</span>
+            </button>
+          </div>
+        )}
       </aside>
 
       <main className={styles.mainContent}>{children}</main>

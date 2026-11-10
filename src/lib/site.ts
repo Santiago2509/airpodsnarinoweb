@@ -14,3 +14,10 @@ export function whatsappUrl(message?: string) {
 export function formatPrice(value: number) {
   return `$${value.toLocaleString("es-CO")}`;
 }
+
+/**
+ * Admin login. Disabled on request: /admin is open to anyone with the link.
+ * Set to true to require a Supabase login again (and only then run
+ * supabase/seguridad.sql, which blocks writes from visitors who are not signed in).
+ */
+export const ADMIN_LOGIN_REQUIRED = false;
